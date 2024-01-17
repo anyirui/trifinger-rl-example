@@ -1,5 +1,5 @@
 [trifinger_rl_experiment]
-task = "lift"  # "push" or "lift"
+task = "push"  # "push" or "lift"
 
 record_transitions = true
 # Specify a policy for each task.

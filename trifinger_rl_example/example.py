@@ -54,6 +54,7 @@ class TorchPushPolicy(TorchBasePolicy):
 
     def __init__(self, action_space, observation_space, episode_length):
         model = policies.get_model_path("push.pt")
+        print(model)
         super().__init__(model, action_space, observation_space, episode_length)
 
 
