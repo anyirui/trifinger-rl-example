@@ -39,6 +39,7 @@ class TorchBasePolicy(PolicyBase):
 
     def get_action(self, observation):
         observation = torch.tensor(observation, dtype=torch.float, device=self.device)
+        print(observation)
         action = self.policy(observation.unsqueeze(0))
         action = action.detach().numpy()[0]
         action = np.clip(action, self.action_space.low, self.action_space.high)
