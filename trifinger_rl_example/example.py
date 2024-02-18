@@ -42,6 +42,7 @@ class TorchBasePolicy(PolicyBase):
         action = self.policy(observation.unsqueeze(0))
         action = action.detach().numpy()[0]
         action = np.clip(action, self.action_space.low, self.action_space.high)
+
         return action
 
 
@@ -65,3 +66,4 @@ class TorchLiftPolicy(TorchBasePolicy):
     def __init__(self, action_space, observation_space, episode_length):
         model = policies.get_model_path("lift.pt")
         super().__init__(model, action_space, observation_space, episode_length)
+
