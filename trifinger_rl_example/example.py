@@ -39,11 +39,12 @@ class ForceMapPolicy(PolicyBase):
         pass  # nothing to do here
 
     def get_action(self, observation, haptic_observation):
+
         print(observation)
         print(haptic_observation)
 
         observation = torch.tensor(observation, dtype=torch.float, device=self.device)
-        force_maps = haptic_observation["force_maps"].reshape(-1)
+     
         action = self.policy(observation.unsqueeze(0))
         action = action.detach().numpy()[0]
         action = np.clip(action, self.action_space.low, self.action_space.high)
