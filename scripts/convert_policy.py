@@ -1,9 +1,10 @@
 import numpy as np
 import d3rlpy
 import os
+from trifinger_tactile_learning import custom_encoders
 
 
-path = "/is/cluster/fast/iandrussow/experiments/tactile_trifinger/2024_01_27_lift_no_haptic_default/crr_dev/working_directories/4/"
+path = "/is/sg2/iandrussow//cluster/fast/experiments/tactile_trifinger/2024_03_26_forcemap/crr/working_directories/0"
 
 algo = d3rlpy.load_learnable(os.path.join(path,"algo_state.d3"))
-algo.save_model(os.path.join(path,"algo_state.pt"))
+algo.save_model(os.path.join(path,"policy.pt"))
