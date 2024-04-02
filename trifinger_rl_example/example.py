@@ -18,7 +18,7 @@ class ForceMapPolicy(PolicyBase):
         episode_length,
     ):
         #torch_model_path = policies.get_model_path("lift.pt")
-        torch_model_path = "/is/sg2/iandrussow/training_results/2024_03_26_forcemap/crr/working_directories/0/policy.pt"
+        torch_model_path = "/is/sg2/iandrussow/cluster/fast/experiments/tactile_trifinger/2024_03_26_forcemap/crr/working_directories/0/policy.pt"
         self.action_space = action_space
         self.device = "cpu"
         self.dtype = np.float32
@@ -124,9 +124,6 @@ class RawImagePolicy(PolicyBase):
         action = np.clip(action, self.action_space.low, self.action_space.high)
         return action
     
-
-
-
 
 
 

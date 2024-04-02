@@ -1,6 +1,6 @@
 import d3rlpy
 import argparse
-
+from trifinger_tactile_learning import custom_encoders
 
 if __name__ == "__main__":
 
@@ -9,5 +9,6 @@ if __name__ == "__main__":
     args = argparser.parse_args()
 
 
-    algo = d3rlpy.load_learnable(args.algo_path)
-    algo.save_policy("policies/lift.pt")
+    algo = d3rlpy.load_learnable(args.algo_path + "algo_state.d3")
+    print(args.algo_path + "policy.pt")
+    algo.save_policy(args.algo_path + "policy.pt")
