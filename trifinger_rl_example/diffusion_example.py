@@ -7,6 +7,8 @@ from trifinger_rl_datasets import PolicyBase, PolicyConfig
 from trifinger_tactile_learning.custom_algorithms import ConditionalUnet1DState
 from diffusers.schedulers.scheduling_ddpm import DDPMScheduler
 
+import time
+
 from . import policies
 
 
@@ -34,11 +36,11 @@ class DiffusionBasePolicy(PolicyBase):
         observation_space,
         episode_length,
         obs_horizon = 2,
-        action_horizon = 8,
-        pred_horizon = 100,
+        action_horizon = 4,
+        pred_horizon = 8,
         action_dim = 9,
         obs_dim = 138,
-        num_diffusion_iters = 10
+        num_diffusion_iters = 16
     ):
         self.action_space = action_space
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -92,6 +94,8 @@ class DiffusionBasePolicy(PolicyBase):
 
 
     def get_action(self, observation):
+
+        start = time.time()
 
         obs_new = observation[:120]
         observation = np.concatenate((obs_new, observation[121:]), axis=0)
@@ -151,6 +155,10 @@ class DiffusionBasePolicy(PolicyBase):
             
         action = self.action.pop(0)
         action = np.clip(action, self.action_space.low, self.action_space.high)
+
+        end = time.time()
+
+        print("Time to get action: ", end - start)
 
         return action
 
