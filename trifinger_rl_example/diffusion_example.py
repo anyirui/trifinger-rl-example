@@ -9,7 +9,6 @@ from trifinger_tactile_learning.custom_algorithms import ConditionalUnet1DState
 from diffusers.schedulers.scheduling_ddpm import DDPMScheduler
 
 import time
-from scipy.interpolate import interp1d
 
 from . import policies
 
@@ -52,7 +51,7 @@ class DiffusionBasePolicy(PolicyBase):
         pred_horizon=8,
         action_dim=9,
         obs_dim=138,
-        num_diffusion_iters=10,
+        num_diffusion_iters=16,
     ):
         self.action_space = action_space
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -110,7 +109,7 @@ class DiffusionBasePolicy(PolicyBase):
 
     def get_action(self, observation):
 
-        start_time = time.time()
+        start = time.time()
 
         obs_new = observation[:120]
         observation = np.concatenate((obs_new, observation[121:]), axis=0)
@@ -173,10 +172,9 @@ class DiffusionBasePolicy(PolicyBase):
         print(action)
         action = np.clip(action, self.action_space.low, self.action_space.high)
 
-        # action = np.array([0.014, 0.87, -1.99,  0.034, 0.87, -1.97, 0.035, 0.87, -1.98])
-        # end_time = time.time()
-        # print("Time to get action: ", round(end_time - start_time, 5))
+        end = time.time()
 
+        print("Time to get action: ", end - start)
         return action
 
 
