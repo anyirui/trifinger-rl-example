@@ -1,4 +1,5 @@
 """Example policy for Real Robot Challenge 2022"""
+
 import numpy as np
 import torch
 
@@ -9,7 +10,7 @@ from . import policies
 
 class ForceMapPolicy(PolicyBase):
 
-    _goal_order = ["object_keypoints", "object_position", "object_orientation"] 
+    _goal_order = ["object_keypoints", "object_position", "object_orientation"]
 
     def __init__(
         self,
@@ -17,7 +18,6 @@ class ForceMapPolicy(PolicyBase):
         observation_space,
         episode_length,
     ):
-        #torch_model_path = policies.get_model_path("lift.pt")
         torch_model_path = "/is/sg2/iandrussow/training_results/2024_03_26_forcemap/crr/working_directories/0/policy.pt"
         self.action_space = action_space
         self.device = "cpu"
@@ -40,12 +40,12 @@ class ForceMapPolicy(PolicyBase):
 
     def get_action(self, observation, haptic_observation):
 
-        print(observation)
-        print(haptic_observation)
-
-        observation = torch.tensor(observation, dtype=torch.float, device=self.device)
-     
-        action = self.policy(observation.unsqueeze(0))
+        obs = np.concatenate(
+            (observation, haptic_observation["force_maps"].flatten()), axis=1
+        )
+        obs = torch.tensor(obs, dtype=torch.float, device=self.device)
+        print(obs)
+        action = self.policy(obs.unsqueeze(0))
         action = action.detach().numpy()[0]
         action = np.clip(action, self.action_space.low, self.action_space.high)
         return action
@@ -53,7 +53,7 @@ class ForceMapPolicy(PolicyBase):
 
 class ForceVecPolicy(PolicyBase):
 
-    _goal_order = ["object_keypoints", "object_position", "object_orientation"] 
+    _goal_order = ["object_keypoints", "object_position", "object_orientation"]
 
     def __init__(
         self,
@@ -87,12 +87,11 @@ class ForceVecPolicy(PolicyBase):
         action = action.detach().numpy()[0]
         action = np.clip(action, self.action_space.low, self.action_space.high)
         return action
-    
 
 
 class RawImagePolicy(PolicyBase):
 
-    _goal_order = ["object_keypoints", "object_position", "object_orientation"] 
+    _goal_order = ["object_keypoints", "object_position", "object_orientation"]
 
     def __init__(
         self,
@@ -126,7 +125,3 @@ class RawImagePolicy(PolicyBase):
         action = action.detach().numpy()[0]
         action = np.clip(action, self.action_space.low, self.action_space.high)
         return action
-    
-
-
-
