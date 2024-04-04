@@ -40,11 +40,8 @@ class ForceMapPolicy(PolicyBase):
 
     def get_action(self, observation, haptic_observation):
 
-        print(np.array(haptic_observation["force_maps"]).shape)
-        print(observation.shape)
-        print(np.array(haptic_observation["force_maps"]).flatten())
         obs = np.concatenate(
-            (observation, np.array(haptic_observation["force_maps"]).flatten()), axis=1
+            (observation, np.array(haptic_observation["force_maps"]).flatten()), axis=0
         )
         obs = torch.tensor(obs, dtype=torch.float, device=self.device)
         print(obs)
