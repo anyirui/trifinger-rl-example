@@ -45,7 +45,7 @@ class ForceMapPolicy(PolicyBase):
         print(np.array(observation["haptic_information"]["force_maps"]).flatten().shape)
         obs = np.concatenate(
             (
-                observation[0],
+                observation["robot_observation"],
                 np.array(observation["haptic_information"]["force_maps"]).flatten(),
             ),
             axis=0,
