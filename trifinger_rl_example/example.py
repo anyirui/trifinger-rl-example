@@ -29,6 +29,7 @@ class NoHapticsPolicy(PolicyBase):
         self.policy = torch.jit.load(
             torch_model_path, map_location=torch.device(self.device)
         )
+        self.policy.to(self.device)
 
     @staticmethod
     def get_policy_config():
