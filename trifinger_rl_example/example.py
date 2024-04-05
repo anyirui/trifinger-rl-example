@@ -94,10 +94,6 @@ class ForceMapPolicy(PolicyBase):
 
     def get_action(self, observation):
 
-        start = torch.cuda.Event(enable_timing=True)
-        end = torch.cuda.Event(enable_timing=True)
-        start.record()
-
         obs = np.concatenate(
             (
                 observation["robot_information"],
@@ -106,6 +102,10 @@ class ForceMapPolicy(PolicyBase):
             axis=0,
         )
         obs = torch.tensor(obs, dtype=torch.float, device=self.device)
+
+        start = torch.cuda.Event(enable_timing=True)
+        end = torch.cuda.Event(enable_timing=True)
+        start.record()
 
         action = self.policy(obs.unsqueeze(0))
         action = action.detach().numpy()[0]
