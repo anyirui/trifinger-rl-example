@@ -40,9 +40,10 @@ class ForceMapPolicy(PolicyBase):
 
     def get_action(self, observation):
 
-        print(observation)
-        print(np.array(observation["haptic_information"]["force_maps"]).shape)
-        print(np.array(observation["haptic_information"]["force_maps"]).flatten().shape)
+        start = torch.cuda.Event(enable_timing=True)
+        end = torch.cuda.Event(enable_timing=True)
+        start.record()
+
         obs = np.concatenate(
             (
                 observation["robot_information"],
@@ -55,6 +56,11 @@ class ForceMapPolicy(PolicyBase):
         action = self.policy(obs.unsqueeze(0))
         action = action.detach().numpy()[0]
         action = np.clip(action, self.action_space.low, self.action_space.high)
+
+        end.record()
+        torch.cuda.synchronize()
+        print(start.elapsed_time(end))
+
         return action
 
 
