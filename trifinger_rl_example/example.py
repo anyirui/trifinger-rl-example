@@ -71,9 +71,10 @@ class ForceMapPolicy(PolicyBase):
         observation_space,
         episode_length,
     ):
+        print("CUDA: ", torch.cuda.is_available())
         torch_model_path = "/is/sg2/iandrussow/training_results/2024_03_26_forcemap/crr/working_directories/0/policy.pt"
         self.action_space = action_space
-        self.device = "cpu"
+        self.device = "cuda"
         self.dtype = np.float32
 
         # load torch script

@@ -5,5 +5,5 @@ record_transitions = true
 haptic_type = "raw"
 
 # Specify a policy
-lift_policy = "trifinger_rl_example.example.NoHapticsPolicy"
+lift_policy = "trifinger_rl_example.example.ForceMapPolicy"
 push_policy = "trifinger_rl_example.example.TorchPushPolicy"
