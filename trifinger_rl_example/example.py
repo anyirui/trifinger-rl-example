@@ -18,12 +18,12 @@ class NoHapticsPolicy(PolicyBase):
         observation_space,
         episode_length,
     ):
-        torch_model_path = "/is/sg2/iandrussow/training_results/2024_03_26_forcemap/crr/working_directories/0/policy.pt"
         self.action_space = action_space
-        self.device = "cuda"
+        self.device = "cpu"
         self.dtype = np.float32
 
         # load torch script
+        torch_model_path = policies.get_model_path("lift.pt")
         self.policy = torch.jit.load(
             torch_model_path, map_location=torch.device(self.device)
         )
@@ -39,28 +39,12 @@ class NoHapticsPolicy(PolicyBase):
         pass  # nothing to do here
 
     def get_action(self, observation):
-
-        start = torch.cuda.Event(enable_timing=True)
-        end = torch.cuda.Event(enable_timing=True)
-        start.record()
-
-        obs = np.concatenate(
-            (
-                observation["robot_information"],
-                np.array(observation["haptic_information"]["force_maps"]).flatten(),
-            ),
-            axis=0,
+        observation = torch.tensor(
+            observation["robot_information"], dtype=torch.float, device=self.device
         )
-        obs = torch.tensor(obs, dtype=torch.float, device=self.device)
-
-        action = self.policy(obs.unsqueeze(0))
+        action = self.policy(observation.unsqueeze(0))
         action = action.detach().numpy()[0]
         action = np.clip(action, self.action_space.low, self.action_space.high)
-
-        end.record()
-        torch.cuda.synchronize()
-        print(start.elapsed_time(end))
-
         return action
 
 
@@ -76,7 +60,7 @@ class ForceMapPolicy(PolicyBase):
     ):
         torch_model_path = "/is/sg2/iandrussow/training_results/2024_03_26_forcemap/crr/working_directories/0/policy.pt"
         self.action_space = action_space
-        self.device = "cuda"
+        self.device = "cpu"
         self.dtype = np.float32
 
         # load torch script
