@@ -21,7 +21,7 @@ class NoHapticsPolicy(PolicyBase):
 
         print("CUDA: ", torch.cuda.is_available())
         self.action_space = action_space
-        self.device = "cuda"
+        self.device = "cpu"
         self.dtype = np.float32
 
         # load torch script
@@ -42,12 +42,22 @@ class NoHapticsPolicy(PolicyBase):
         pass  # nothing to do here
 
     def get_action(self, observation):
+
+        start = torch.cuda.Event(enable_timing=True)
+        end = torch.cuda.Event(enable_timing=True)
+        start.record()
+
         observation = torch.tensor(
             observation["robot_information"], dtype=torch.float, device=self.device
         )
         action = self.policy(torch.unsqueeze(observation, 0))
         action = action.detach().numpy()[0]
         action = np.clip(action, self.action_space.low, self.action_space.high)
+
+        end.record()
+        torch.cuda.synchronize()
+        print(start.elapsed_time(end))
+
         return action
 
 
