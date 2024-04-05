@@ -19,7 +19,7 @@ class NoHapticsPolicy(PolicyBase):
         episode_length,
     ):
         self.action_space = action_space
-        self.device = "cpu"
+        self.device = "cuda"
         self.dtype = np.float32
 
         # load torch script
@@ -27,6 +27,8 @@ class NoHapticsPolicy(PolicyBase):
         self.policy = torch.jit.load(
             torch_model_path, map_location=torch.device(self.device)
         )
+
+        print("Policy running on: ", self.policy.device)
 
     @staticmethod
     def get_policy_config():
