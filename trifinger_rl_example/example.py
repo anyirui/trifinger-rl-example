@@ -41,7 +41,7 @@ class ForceMapPolicy(PolicyBase):
     def get_action(self, observation):
 
         print(observation)
-        print(observation["haptic_information"]["force_maps"].shape)
+        print(np.array(observation["haptic_information"]["force_maps"]).shape)
         print(np.array(observation["haptic_information"]["force_maps"]).flatten().shape)
         obs = np.concatenate(
             (
