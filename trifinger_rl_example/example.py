@@ -18,6 +18,8 @@ class NoHapticsPolicy(PolicyBase):
         observation_space,
         episode_length,
     ):
+
+        print("CUDA: ", torch.cuda.is_available())
         self.action_space = action_space
         self.device = "cuda"
         self.dtype = np.float32
