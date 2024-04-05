@@ -40,9 +40,9 @@ class ForceMapPolicy(PolicyBase):
 
     def get_action(self, observation):
 
-        # start = torch.cuda.Event(enable_timing=True)
-        # end = torch.cuda.Event(enable_timing=True)
-        # start.record()
+        start = torch.cuda.Event(enable_timing=True)
+        end = torch.cuda.Event(enable_timing=True)
+        start.record()
 
         obs = np.concatenate(
             (
@@ -57,9 +57,9 @@ class ForceMapPolicy(PolicyBase):
         action = action.detach().numpy()[0]
         action = np.clip(action, self.action_space.low, self.action_space.high)
 
-        # end.record()
-        # torch.cuda.synchronize()
-        # print(start.elapsed_time(end))
+        end.record()
+        torch.cuda.synchronize()
+        print(start.elapsed_time(end))
 
         return action
 
