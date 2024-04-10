@@ -4,4 +4,4 @@ task = "lift"  # "push" or "lift"
 record_transitions = true
 
 # Specify a policy
-lift_policy = "trifinger_rl_example.example.ForceMapPolicy"
+lift_policy = "trifinger_rl_example.example.ForceVecPolicy"

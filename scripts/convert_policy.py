@@ -4,7 +4,9 @@ import os
 from trifinger_tactile_learning import custom_encoders
 
 
-path = "/is/sg2/iandrussow//cluster/fast/experiments/tactile_trifinger/2024_03_26_forcemap/crr/working_directories/0"
+path = (
+    "/home/iandrussow/trained_models/2024_03_01_forcevector/crr/working_directories/2"
+)
 
-algo = d3rlpy.load_learnable(os.path.join(path,"algo_state.d3"))
-algo.save_model(os.path.join(path,"policy.pt"))
+algo = d3rlpy.load_learnable(os.path.join(path, "algo_state.d3"))
+algo.save_model(os.path.join(path, "policy.pt"))
