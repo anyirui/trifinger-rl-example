@@ -125,7 +125,7 @@ class ForceMapPolicy(PolicyBase):
         end.record()
         torch.cuda.synchronize()
         self.timings.append(start.elapsed_time(end))
-
+        action = [-0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
         return action
 
 
