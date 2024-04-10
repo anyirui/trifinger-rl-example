@@ -92,11 +92,12 @@ class ForceMapPolicy(PolicyBase):
         )
 
     def reset(self):
-        print(
-            "Mean timing of inference in the last episode: ",
-            sum(self.timings) / len(self.timings),
-        )
-        self.timings = []
+        if len(self.timings) > 0:
+            print(
+                "Mean timing of inference in the last episode: ",
+                sum(self.timings) / len(self.timings),
+            )
+            self.timings = []
 
     def get_action(self, observation):
 
