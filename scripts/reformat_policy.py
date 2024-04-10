@@ -1,6 +1,7 @@
 import d3rlpy
 import argparse
 from trifinger_tactile_learning import custom_encoders
+import torch
 
 if __name__ == "__main__":
 

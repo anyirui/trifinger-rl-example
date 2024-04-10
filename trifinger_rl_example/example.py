@@ -82,7 +82,7 @@ class ForceMapPolicy(PolicyBase):
         self.policy = torch.jit.load(
             torch_model_path, map_location=torch.device(self.device)
         )
-        self.policy.to(torch.half)
+        self.policy.to(torch.float)
         self.timings = []
 
     @staticmethod
@@ -112,7 +112,7 @@ class ForceMapPolicy(PolicyBase):
             ),
             axis=0,
         )
-        obs = torch.tensor(obs, dtype=torch.half, device=self.device)
+        obs = torch.tensor(obs, dtype=torch.float, device=self.device)
 
         start = torch.cuda.Event(enable_timing=True)
         end = torch.cuda.Event(enable_timing=True)
