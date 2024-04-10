@@ -108,7 +108,7 @@ class ForceMapPolicy(PolicyBase):
         start.record()
 
         action = self.policy(obs.unsqueeze(0))
-        action = action.detach().numpy()[0]
+        action = action.detach().cpu().numpy()[0]
         action = np.clip(action, self.action_space.low, self.action_space.high)
 
         end.record()
