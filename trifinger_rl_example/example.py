@@ -82,6 +82,7 @@ class ForceMapPolicy(PolicyBase):
         self.policy = torch.jit.load(
             torch_model_path, map_location=torch.device(self.device)
         )
+        self.timings = []
 
     @staticmethod
     def get_policy_config():
@@ -91,7 +92,11 @@ class ForceMapPolicy(PolicyBase):
         )
 
     def reset(self):
-        pass  # nothing to do here
+        print(
+            "Mean timing of inference in the last episode: ",
+            sum(self.timings) / len(self.timings),
+        )
+        self.timings = []
 
     def get_action(self, observation):
 
@@ -110,11 +115,11 @@ class ForceMapPolicy(PolicyBase):
 
         action = self.policy(obs.unsqueeze(0))
         action = action.detach().cpu().numpy()[0]
-        # action = np.clip(action, self.action_space.low, self.action_space.high)
+        action = np.clip(action, self.action_space.low, self.action_space.high)
 
         end.record()
         torch.cuda.synchronize()
-        print(start.elapsed_time(end))
+        self.timings.append(start.elapsed_time(end))
 
         return action
 
