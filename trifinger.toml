@@ -2,6 +2,8 @@
 task = "lift"  # "push" or "lift"
 
 record_transitions = true
+haptic_type = "raw"
 
 # Specify a policy
 lift_policy = "trifinger_rl_example.example.ForceVecPolicy"
+push_policy = "trifinger_rl_example.example.TorchPushPolicy"
