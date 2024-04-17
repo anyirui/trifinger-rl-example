@@ -21,7 +21,7 @@ class NoHapticsPolicy(PolicyBase):
 
         print("CUDA: ", torch.cuda.is_available())
         self.action_space = action_space
-        self.device = "cpu"
+        self.device = "cuda"
         self.dtype = np.float32
 
         # load torch script
@@ -52,11 +52,10 @@ class NoHapticsPolicy(PolicyBase):
         )
         action = self.policy(torch.unsqueeze(observation, 0))
         action = action.detach().numpy()[0]
-        action = np.clip(action, self.action_space.low, self.action_space.high)
+        # action = np.clip(action, self.action_space.low, self.action_space.high)
 
         end.record()
         torch.cuda.synchronize()
-        print(start.elapsed_time(end))
 
         return action
 
@@ -124,6 +123,7 @@ class ForceMapPolicy(PolicyBase):
 
         end.record()
         torch.cuda.synchronize()
+        print(start.elapsed_time(end))
         self.timings.append(start.elapsed_time(end))
         action = [-0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
         return action
@@ -183,15 +183,18 @@ class RawImagePolicy(PolicyBase):
         observation_space,
         episode_length,
     ):
-        torch_model_path = policies.get_model_path("lift.pt")
+        print("CUDA: ", torch.cuda.is_available())
+        torch_model_path = "/is/sg2/iandrussow/training_results/2024_03_26_forcemap/crr/working_directories/0/policy.pt"
         self.action_space = action_space
-        self.device = "cpu"
+        self.device = "cuda"
         self.dtype = np.float32
 
         # load torch script
         self.policy = torch.jit.load(
             torch_model_path, map_location=torch.device(self.device)
         )
+        self.policy.to(torch.float)
+        self.timings = []
 
     @staticmethod
     def get_policy_config():
@@ -200,12 +203,39 @@ class RawImagePolicy(PolicyBase):
             image_obs=False,
         )
 
+    def get_timing(self):
+        if len(self.timings) > 0:
+            print(
+                "Mean timing of inference in the last episode: ",
+                sum(self.timings) / len(self.timings),
+            )
+            self.timings = []
+
     def reset(self):
-        pass  # nothing to do here
+        pass
 
     def get_action(self, observation):
-        observation = torch.tensor(observation, dtype=torch.float, device=self.device)
-        action = self.policy(observation.unsqueeze(0))
-        action = action.detach().numpy()[0]
+
+        obs = np.concatenate(
+            (
+                observation["robot_information"],
+                np.array(observation["haptic_information"]["raw_image"]).flatten(),
+            ),
+            axis=0,
+        )
+        obs = torch.tensor(obs, dtype=torch.float, device=self.device)
+
+        start = torch.cuda.Event(enable_timing=True)
+        end = torch.cuda.Event(enable_timing=True)
+        start.record()
+
+        action = self.policy(obs.unsqueeze(0))
+        action = action.detach().cpu().numpy()[0]
         action = np.clip(action, self.action_space.low, self.action_space.high)
+
+        end.record()
+        torch.cuda.synchronize()
+        print(start.elapsed_time(end))
+        self.timings.append(start.elapsed_time(end))
+        action = [-0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
         return action
