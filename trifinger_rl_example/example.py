@@ -122,7 +122,6 @@ class ForceMapPolicy(PolicyBase):
         )
 
         obs = torch.tensor(obs, dtype=torch.float, device=self.device)
-        print("New policy")
 
         start = torch.cuda.Event(enable_timing=True)
         end = torch.cuda.Event(enable_timing=True)
@@ -136,7 +135,7 @@ class ForceMapPolicy(PolicyBase):
         torch.cuda.synchronize()
         print(start.elapsed_time(end))
         self.timings.append(start.elapsed_time(end))
-        # action = [-0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        action = [-0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 
         #action = self.ort_session.run(None, {"input_0": np.expand_dims(obs, axis=0)})[0]
         return action
