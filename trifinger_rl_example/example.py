@@ -116,7 +116,7 @@ class ForceMapPolicy(PolicyBase):
 
         obs = torch.concat(
             (
-                observation["robot_information"],
+                torch.tensor(observation["robot_information"]),
                 torch.flatten(observation["haptic_information"]["force_maps"])),
             axis=0,
         )
