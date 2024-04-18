@@ -6,7 +6,7 @@ import torch
 from trifinger_rl_datasets import PolicyBase, PolicyConfig
 
 from . import policies
-import onnxruntime as ort
+#import onnxruntime as ort
 
 
 class NoHapticsPolicy(PolicyBase):
