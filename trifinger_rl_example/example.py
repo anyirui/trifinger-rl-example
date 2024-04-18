@@ -6,8 +6,10 @@ import torch
 from trifinger_rl_datasets import PolicyBase, PolicyConfig
 
 from . import policies
+import logging
 #import onnxruntime as ort
 
+logging.basicConfig(level=logging.INFO)
 
 class NoHapticsPolicy(PolicyBase):
 
@@ -113,7 +115,7 @@ class ForceMapPolicy(PolicyBase):
         pass
 
     def get_action(self, observation):
-
+        
         obs = torch.concat(
             (
                 torch.tensor(observation["robot_information"]),
@@ -121,13 +123,16 @@ class ForceMapPolicy(PolicyBase):
             axis=0,
         )
 
+        logging.info(obs)
+        logging.info(obs.shape)
+        logging.info(torch.unsqueeze(obs,0).shape)
         obs = obs.to(device=self.device)
 
         start = torch.cuda.Event(enable_timing=True)
         end = torch.cuda.Event(enable_timing=True)
         start.record()
 
-        action = self.policy(obs)
+        action = self.policy(torch.unsqueeze(obs,0))
         action = action.detach().cpu().numpy()[0]
         #action = np.clip(action, self.action_space.low, self.action_space.high)
 
