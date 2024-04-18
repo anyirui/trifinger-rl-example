@@ -104,10 +104,11 @@ class ForceMapPolicy(PolicyBase):
 
     def get_timing(self):
         if len(self.timings) > 0:
+            msg =  f"Mean timing of inference in the last episode: {sum(self.timings) / len(self.timings)}"
             self.timings = []
-            return f"Mean timing of inference in the last episode: {sum(self.timings) / len(self.timings)}"
         else:
-            return "No timing information available"
+            msg = "No timing information available"
+        return msg
             
             
 
@@ -123,9 +124,6 @@ class ForceMapPolicy(PolicyBase):
             axis=0,
         ).float()
 
-        logging.info(obs)
-        logging.info(obs.dtype)
-        logging.info(torch.unsqueeze(obs,0).shape)
         obs = obs.to(device=self.device)
 
         start = torch.cuda.Event(enable_timing=True)
