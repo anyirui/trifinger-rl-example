@@ -9,7 +9,7 @@ if __name__ == "__main__":
     argparser.add_argument("algo_path", type=str)
     args = argparser.parse_args()
 
-    algo = d3rlpy.load_learnable(args.algo_path + "algo_state.d3", device="cpu")
+    algo = d3rlpy.load_learnable(args.algo_path + "algo_state.d3", device="cuda")
     print(args.algo_path + "policy.pt")
-    # algo.save_policy(args.algo_path + "policy.pt")
-    algo.save_policy(args.algo_path + "policy.onnx")
+    algo.save_policy(args.algo_path + "policy.pt")
+    #algo.save_policy(args.algo_path + "policy.onnx")
