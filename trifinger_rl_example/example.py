@@ -119,14 +119,14 @@ class ForceMapPolicy(PolicyBase):
             axis=0,
         )
         obs = torch.tensor(obs, dtype=torch.float, device=self.device)
-
+        print("New policy")
         # start = torch.cuda.Event(enable_timing=True)
         # end = torch.cuda.Event(enable_timing=True)
         # start.record()
 
         action = self.policy(obs.unsqueeze(0))
         action = action.detach().cpu().numpy()[0]
-        # action = np.clip(action, self.action_space.low, self.action_space.high)
+        action = np.clip(action, self.action_space.low, self.action_space.high)
 
         # end.record()
         # torch.cuda.synchronize()
