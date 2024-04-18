@@ -102,11 +102,12 @@ class ForceMapPolicy(PolicyBase):
 
     def get_timing(self):
         if len(self.timings) > 0:
-            print(
-                "Mean timing of inference in the last episode: ",
-                sum(self.timings) / len(self.timings),
-            )
             self.timings = []
+            return f"Mean timing of inference in the last episode: {sum(self.timings) / len(self.timings)}"
+        else:
+            return "No timing information available"
+            
+            
 
     def reset(self):
         pass
