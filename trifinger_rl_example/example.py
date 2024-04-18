@@ -6,6 +6,7 @@ import torch
 from trifinger_rl_datasets import PolicyBase, PolicyConfig
 
 from . import policies
+import onnxruntime as ort
 
 
 class NoHapticsPolicy(PolicyBase):
@@ -78,10 +79,16 @@ class ForceMapPolicy(PolicyBase):
         self.dtype = np.float32
 
         # load torch script
-        self.policy = torch.jit.load(
-            torch_model_path, map_location=torch.device(self.device)
+        # self.policy = torch.jit.load(
+        #     torch_model_path, map_location=torch.device(self.device)
+        # )
+        # self.policy.to(torch.float)
+
+        print("ORT device: ", ort.get_device())
+
+        self.ort_session = ort.InferenceSession(
+            "/home/andrussow/cluster/fast/experiments/tactile_trifinger/2024_04_16_forcemap/crr/working_directories/0/policy.onnx"
         )
-        self.policy.to(torch.float)
         self.timings = []
 
     @staticmethod
@@ -111,21 +118,23 @@ class ForceMapPolicy(PolicyBase):
             ),
             axis=0,
         )
-        obs = torch.tensor(obs, dtype=torch.float, device=self.device)
+        # obs = torch.tensor(obs, dtype=torch.float, device=self.device)
 
-        start = torch.cuda.Event(enable_timing=True)
-        end = torch.cuda.Event(enable_timing=True)
-        start.record()
+        # start = torch.cuda.Event(enable_timing=True)
+        # end = torch.cuda.Event(enable_timing=True)
+        # start.record()
 
-        action = self.policy(obs.unsqueeze(0))
-        action = action.detach().cpu().numpy()[0]
-        action = np.clip(action, self.action_space.low, self.action_space.high)
+        # action = self.policy(obs.unsqueeze(0))
+        # action = action.detach().cpu().numpy()[0]
+        # action = np.clip(action, self.action_space.low, self.action_space.high)
 
-        end.record()
-        torch.cuda.synchronize()
-        print(start.elapsed_time(end))
-        self.timings.append(start.elapsed_time(end))
-        action = [-0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        # end.record()
+        # torch.cuda.synchronize()
+        # print(start.elapsed_time(end))
+        # self.timings.append(start.elapsed_time(end))
+        # action = [-0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+
+        action = self.ort_session.run(None, {"input_0": np.expand_dims(obs, axis=0)})[0]
         return action
 
 
@@ -167,6 +176,7 @@ class ForceVecPolicy(PolicyBase):
             (observation, haptic_observation["force_vecs"].flatten()), axis=1
         )
         obs = torch.tensor(obs, dtype=torch.float, device=self.device)
+
         action = self.policy(obs.unsqueeze(0))
         action = action.detach().numpy()[0]
         action = np.clip(action, self.action_space.low, self.action_space.high)
@@ -184,16 +194,22 @@ class RawImagePolicy(PolicyBase):
         episode_length,
     ):
         print("CUDA: ", torch.cuda.is_available())
-        torch_model_path = "/is/sg2/iandrussow/training_results/2024_03_26_forcemap/crr/working_directories/0/policy.pt"
+        torch_model_path = "/home/andrussow/cluster/fast/experiments/tactile_trifinger/2024_03_01_raw_image/crr/working_directories/0/policy.pt"
         self.action_space = action_space
-        self.device = "cuda"
+        self.device = "cpu"
         self.dtype = np.float32
 
         # load torch script
-        self.policy = torch.jit.load(
-            torch_model_path, map_location=torch.device(self.device)
+        # self.policy = torch.jit.load(
+        #     torch_model_path, map_location=torch.device(self.device)
+        # )
+        # self.policy.to(torch.float)
+        print("ORT device: ", ort.get_device())
+
+        self.ort_session = ort.InferenceSession(
+            "/home/andrussow/cluster/fast/experiments/tactile_trifinger/2024_03_01_raw_image/crr/working_directories/0/policy.onnx"
         )
-        self.policy.to(torch.float)
+
         self.timings = []
 
     @staticmethod
@@ -223,19 +239,12 @@ class RawImagePolicy(PolicyBase):
             ),
             axis=0,
         )
-        obs = torch.tensor(obs, dtype=torch.float, device=self.device)
+        # obs = torch.tensor(obs, dtype=torch.float, device=self.device)
 
-        start = torch.cuda.Event(enable_timing=True)
-        end = torch.cuda.Event(enable_timing=True)
-        start.record()
+        action = self.ort_session.run(None, {"input_0": np.expand_dims(obs, axis=0)})[0]
 
-        action = self.policy(obs.unsqueeze(0))
-        action = action.detach().cpu().numpy()[0]
-        action = np.clip(action, self.action_space.low, self.action_space.high)
+        # action = self.policy(obs.unsqueeze(0))
+        # action = action.detach().cpu().numpy()[0]
+        # action = np.clip(action, self.action_space.low, self.action_space.high)
 
-        end.record()
-        torch.cuda.synchronize()
-        print(start.elapsed_time(end))
-        self.timings.append(start.elapsed_time(end))
-        action = [-0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
         return action
