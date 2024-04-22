@@ -156,7 +156,7 @@ class ForceVecPolicy(PolicyBase):
         episode_length,
     ):
         torch_model_path = torch_model_path = (
-            "/home/iandrussow/trained_models/2024_03_01_forcevector/crr/working_directories/2/policy.pt"
+            "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_03_01_forcevector/policy.pt"
         )
         self.action_space = action_space
         self.device = "cpu"
