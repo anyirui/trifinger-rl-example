@@ -139,7 +139,7 @@ class ForceMapPolicy(PolicyBase):
         # torch.cuda.synchronize()
         # print(start.elapsed_time(end))
         # self.timings.append(start.elapsed_time(end))
-        action = [-0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        # action = [-0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 
         # action = self.ort_session.run(None, {"input_0": np.expand_dims(obs, axis=0)})[0]
         return action
@@ -159,7 +159,7 @@ class ForceVecPolicy(PolicyBase):
             "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_03_01_forcevector/policy.pt"
         )
         self.action_space = action_space
-        self.device = "cpu"
+        self.device = "cuda"
         self.dtype = np.float32
 
         # load torch script

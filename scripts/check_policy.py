@@ -1,11 +1,12 @@
 from trifinger_rl_example.example import ForceMapPolicy, RawImagePolicy, NoHapticsPolicy
 import torch
+import numpy as np
 
 
 if __name__ == "__main__":
 
     input = {
-        "robot_information": torch.rand(139),
+        "robot_information": np.random.rand(139),
         "haptic_information": {
             "force_maps": torch.rand(1, 9, 40, 40),
             "raw_image": torch.rand(1, 9, 77, 102),
