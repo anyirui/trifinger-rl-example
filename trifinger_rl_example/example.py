@@ -245,7 +245,7 @@ class RawImagePolicy(PolicyBase):
             (
                 torch.tensor(observation["robot_information"]),
                 torch.flatten(
-                    torch.tensor(observation["haptic_information"]["raw_image"])
+                    torch.tensor(observation["haptic_information"]["raw_images"])
                 ),
             ),
             axis=0,
