@@ -241,19 +241,22 @@ class RawImagePolicy(PolicyBase):
 
     def get_action(self, observation):
 
-        obs = np.concatenate(
+        obs = torch.concat(
             (
-                observation["robot_information"],
-                np.array(observation["haptic_information"]["raw_image"]).flatten(),
+                torch.tensor(observation["robot_information"]),
+                torch.flatten(
+                    torch.tensor(observation["haptic_information"]["raw_image"])
+                ),
             ),
             axis=0,
-        )
-        obs = torch.tensor(obs, dtype=torch.float, device=self.device)
+        ).float()
+
+        obs = obs.to(device=self.device)
 
         # action = self.ort_session.run(None, {"input_0": np.expand_dims(obs, axis=0)})[0]
 
         action = self.policy(obs.unsqueeze(0))
         action = action.detach().cpu().numpy()[0]
-        # action = np.clip(action, self.action_space.low, self.action_space.high)
+        action = np.clip(action, self.action_space.low, self.action_space.high)
 
         return action
