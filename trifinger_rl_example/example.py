@@ -117,8 +117,6 @@ class ForceMapPolicy(PolicyBase):
 
     def get_action(self, observation):
 
-        logging.info("Observation: %s", observation)
-
         obs = torch.concat(
             (
                 torch.tensor(observation["robot_information"]),

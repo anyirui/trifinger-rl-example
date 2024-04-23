@@ -12,7 +12,7 @@ if __name__ == "__main__":
             "raw_image": torch.rand(1, 9, 77, 102),
         },
     }
-    policy = ForceMapPolicy(0, 0, 0)
+    policy = RawImagePolicy(0, 0, 0)
 
     for i in range(200):
         policy.get_action(input)
