@@ -9,7 +9,8 @@ if __name__ == "__main__":
         "robot_information": np.random.rand(139),
         "haptic_information": {
             "force_maps": torch.rand(1, 9, 40, 40),
-            "raw_image": torch.rand(1, 9, 77, 102),
+            "raw_images": torch.rand(1, 9, 77, 102),
+            "force_vecs": torch.rand(1, 3, 6),
         },
     }
     policy = RawImagePolicy(0, 0, 0)
