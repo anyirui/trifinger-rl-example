@@ -1,4 +1,9 @@
-from trifinger_rl_example.example import ForceMapPolicy, RawImagePolicy, NoHapticsPolicy
+from trifinger_rl_example.example import (
+    ForceMapPolicy,
+    RawImagePolicy,
+    NoHapticsPolicy,
+    ForceVecPolicy,
+)
 import torch
 import numpy as np
 
@@ -13,7 +18,7 @@ if __name__ == "__main__":
             "force_vecs": torch.rand(1, 3, 6),
         },
     }
-    policy = RawImagePolicy(0, 0, 0)
+    policy = NoHapticsPolicy(0, 0, 0)
 
     for i in range(200):
         policy.get_action(input)

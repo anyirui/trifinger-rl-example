@@ -26,7 +26,7 @@ class NoHapticsPolicy(PolicyBase):
 
         print("CUDA: ", torch.cuda.is_available())
         self.action_space = action_space
-        self.device = "cuda"
+        self.device = "cpu"
         self.dtype = np.float32
 
         # load torch script
@@ -117,6 +117,11 @@ class ForceMapPolicy(PolicyBase):
 
     def get_action(self, observation):
 
+        logging.info(
+            "Sensor delays:", observation["haptic_information"]["capture_delays"]
+        )
+        logging.info("Cube delay:", observation["robot_information"][:34])
+
         obs = torch.concat(
             (
                 torch.tensor(observation["robot_information"]),
@@ -179,16 +184,23 @@ class ForceVecPolicy(PolicyBase):
     def reset(self):
         pass  # nothing to do here
 
-    def get_action(self, observation, haptic_observation):
+    def get_action(self, observation):
 
-        obs = np.concatenate(
-            (observation, haptic_observation["force_vecs"].flatten()), axis=1
-        )
-        obs = torch.tensor(obs, dtype=torch.float, device=self.device)
+        obs = torch.concat(
+            (
+                torch.tensor(observation["robot_information"]),
+                torch.flatten(
+                    torch.tensor(observation["haptic_information"]["force_vecs"])
+                ),
+            ),
+            axis=0,
+        ).float()
+
+        obs = obs.to(device=self.device)
 
         action = self.policy(obs.unsqueeze(0))
-        action = action.detach().numpy()[0]
-        # action = np.clip(action, self.action_space.low, self.action_space.high)
+        action = action.detach().cpu().numpy()[0]
+        action = np.clip(action, self.action_space.low, self.action_space.high)
         return action
 
 
@@ -203,11 +215,12 @@ class RawImagePolicy(PolicyBase):
         episode_length,
     ):
         print("CUDA: ", torch.cuda.is_available())
-        torch_model_path = "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_04_16_raw_image/policy.pt"
+        torch_model_path = "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_04_24_raw_image/policy.pt"
         self.action_space = action_space
         self.device = "cuda"
         self.dtype = np.float32
 
+        print(torch_model_path)
         # load torch script
         self.policy = torch.jit.load(
             torch_model_path, map_location=torch.device(self.device)
