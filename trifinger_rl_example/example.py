@@ -117,10 +117,10 @@ class ForceMapPolicy(PolicyBase):
 
     def get_action(self, observation):
 
-        logging.info(
-            "Sensor delays:", str(observation["haptic_information"]["capture_delays"])
-        )
-        logging.info("Cube delay:", str(observation["robot_information"][34]))
+        # logging.info(
+        #     "Sensor delays:", str(observation["haptic_information"]["capture_delays"])
+        # )
+        # logging.info("Cube delay:", str(observation["robot_information"][34]))
 
         obs = torch.concat(
             (
