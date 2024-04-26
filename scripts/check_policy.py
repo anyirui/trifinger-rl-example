@@ -6,6 +6,9 @@ from trifinger_rl_example.example import (
 )
 import torch
 import numpy as np
+import os
+
+# os.nice(-10)
 
 
 if __name__ == "__main__":
@@ -20,14 +23,14 @@ if __name__ == "__main__":
     }
     policy = NoHapticsPolicy(0, 0, 0)
 
-    for i in range(200):
+    for i in range(20):
         policy.get_action(input)
 
     start = torch.cuda.Event(enable_timing=True)
     end = torch.cuda.Event(enable_timing=True)
     timings = []
 
-    for i in range(1000):
+    for i in range(20):
 
         start.record()
         action = policy.get_action(input)
@@ -36,8 +39,8 @@ if __name__ == "__main__":
         timings.append(start.elapsed_time(end))
 
     mean = sum(timings) / len(timings)
-    print("Mean: ", mean)
-    print("Std: ", (sum((x - mean) ** 2 for x in timings) / len(timings)) ** 0.5)
+    # print("Mean: ", mean)
+    # print("Std: ", (sum((x - mean) ** 2 for x in timings) / len(timings)) ** 0.5)
 
-    print("Max: ", max(timings))
-    print("Min: ", min(timings))
+    # print("Max: ", max(timings))
+    # print("Min: ", min(timings))

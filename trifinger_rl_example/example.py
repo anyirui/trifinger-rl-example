@@ -12,6 +12,8 @@ import logging
 
 logging.basicConfig(level=logging.INFO)
 
+torch.cudnn.benchmark = True
+
 
 class NoHapticsPolicy(PolicyBase):
 
@@ -57,7 +59,7 @@ class NoHapticsPolicy(PolicyBase):
         )
         action = self.policy(torch.unsqueeze(observation, 0))
         action = action.detach().numpy()[0]
-        action = np.clip(action, self.action_space.low, self.action_space.high)
+        # action = np.clip(action, self.action_space.low, self.action_space.high)
 
         end.record()
         torch.cuda.synchronize()
