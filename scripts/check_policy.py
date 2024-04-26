@@ -21,7 +21,7 @@ if __name__ == "__main__":
             "force_vecs": torch.rand(1, 3, 6),
         },
     }
-    policy = ForceMapPolicy(0, 0, 0)
+    policy = RawImagePolicy(0, 0, 0)
 
     for i in range(20):
         policy.get_action(input)

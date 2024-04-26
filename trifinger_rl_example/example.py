@@ -12,7 +12,7 @@ import onnxruntime as ort
 
 logging.basicConfig(level=logging.INFO)
 
-torch.backends.cudnn.benchmark = True
+# torch.backends.cudnn.benchmark = True
 
 
 class NoHapticsPolicy(PolicyBase):
@@ -150,7 +150,10 @@ class ForceMapPolicy(PolicyBase):
         # self.timings.append(start.elapsed_time(end))
         # action = [-0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 
-        action = self.ort_session.run(None, {"input_0": np.expand_dims(obs, axis=0)})[0]
+        action = self.ort_session.run(None, {"input_0": np.expand_dims(obs, axis=0)})[
+            0
+        ][0]
+        action = np.clip(action, self.action_space.low, self.action_space.high)
 
         return action
 
@@ -232,7 +235,7 @@ class RawImagePolicy(PolicyBase):
         # print("ORT device: ", ort.get_device())
 
         # self.ort_session = ort.InferenceSession(
-        #     "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_04_16_raw_image/policy.onnx"
+        #     "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_04_24_raw_image/policy.onnx"
         # )
 
         self.timings = []
