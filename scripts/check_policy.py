@@ -21,7 +21,7 @@ if __name__ == "__main__":
             "force_vecs": torch.rand(1, 3, 6),
         },
     }
-    policy = NoHapticsPolicy(0, 0, 0)
+    policy = ForceMapPolicy(0, 0, 0)
 
     for i in range(20):
         policy.get_action(input)
@@ -39,8 +39,8 @@ if __name__ == "__main__":
         timings.append(start.elapsed_time(end))
 
     mean = sum(timings) / len(timings)
-    # print("Mean: ", mean)
-    # print("Std: ", (sum((x - mean) ** 2 for x in timings) / len(timings)) ** 0.5)
+    print("Mean: ", mean)
+    print("Std: ", (sum((x - mean) ** 2 for x in timings) / len(timings)) ** 0.5)
 
-    # print("Max: ", max(timings))
-    # print("Min: ", min(timings))
+    print("Max: ", max(timings))
+    print("Min: ", min(timings))
