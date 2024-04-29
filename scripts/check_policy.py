@@ -14,9 +14,9 @@ if __name__ == "__main__":
     input = {
         "robot_information": np.random.rand(139),
         "haptic_information": {
-            "force_maps": torch.rand(1, 9, 40, 40),
-            "raw_images": torch.rand(1, 9, 77, 102),
-            "force_vecs": torch.rand(1, 3, 6),
+            "force_maps": torch.rand(9, 40, 40),
+            "raw_images": torch.rand(9, 77, 102),
+            "force_vecs": torch.rand(3, 6),
         },
     }
     policy = BinaryPolicy(0, 0, 0)
