@@ -168,16 +168,20 @@ class ForceVecPolicy(PolicyBase):
         observation_space,
         episode_length,
     ):
-        torch_model_path = torch_model_path = (
-            "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_03_01_forcevector/policy.pt"
-        )
+        torch_model_path = "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_03_01_forcevector/policy.pt"
         self.action_space = action_space
-        self.device = "cuda"
+        self.device = "cpu"
         self.dtype = np.float32
 
-        # load torch script
-        self.policy = torch.jit.load(
-            torch_model_path, map_location=torch.device(self.device)
+        # # load torch script
+        # self.policy = torch.jit.load(
+        #     torch_model_path, map_location=torch.device(self.device)
+        # )
+
+        print("ORT device: ", ort.get_device())
+
+        self.ort_session = ort.InferenceSession(
+            "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_03_01_forcevector/policy.onnx"
         )
 
     @staticmethod
@@ -202,11 +206,14 @@ class ForceVecPolicy(PolicyBase):
             axis=0,
         ).float()
 
-        obs = obs.to(device=self.device)
+        # obs = obs.to(device=self.device)
+        action = self.ort_session.run(None, {"input_0": np.expand_dims(obs, axis=0)})[
+            0
+        ][0]
 
-        action = self.policy(obs.unsqueeze(0))
-        action = action.detach().cpu().numpy()[0]
-        action = np.clip(action, self.action_space.low, self.action_space.high)
+        # action = self.policy(obs.unsqueeze(0))
+        # action = action.detach().cpu().numpy()[0]
+        # action = np.clip(action, self.action_space.low, self.action_space.high)
         return action
 
 
