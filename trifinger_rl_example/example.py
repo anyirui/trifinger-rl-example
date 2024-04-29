@@ -12,7 +12,7 @@ import onnxruntime as ort
 
 logging.basicConfig(level=logging.INFO)
 
-# torch.backends.cudnn.benchmark = True
+torch.backends.cudnn.benchmark = True
 
 
 class NoHapticsPolicy(PolicyBase):
@@ -221,13 +221,12 @@ class RawImagePolicy(PolicyBase):
         episode_length,
     ):
         print("CUDA: ", torch.cuda.is_available())
-        torch_model_path = "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_04_24_raw_image/policy.pt"
+        torch_model_path = "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_04_29_raw_image_resnet9/policy.pt"
+        # torch_model_path = "/is/sg2/iandrussow/trifinger_robot/trained_models/test_models/convmixer/policy.pt"
         self.action_space = action_space
         self.device = "cuda"
         self.dtype = np.float32
 
-        print(torch_model_path)
-        # load torch script
         self.policy = torch.jit.load(
             torch_model_path, map_location=torch.device(self.device)
         )
@@ -235,7 +234,8 @@ class RawImagePolicy(PolicyBase):
         # print("ORT device: ", ort.get_device())
 
         # self.ort_session = ort.InferenceSession(
-        #     "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_04_24_raw_image/policy.onnx"
+        #     # "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_04_24_raw_image_squeezenet/policy.onnx"
+        #     # "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_04_29_raw_image_resnet9/policy.onnx"
         # )
 
         self.timings = []

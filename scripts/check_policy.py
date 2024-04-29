@@ -8,9 +8,6 @@ import torch
 import numpy as np
 import os
 
-# os.nice(-10)
-
-
 if __name__ == "__main__":
 
     input = {
@@ -30,7 +27,7 @@ if __name__ == "__main__":
     end = torch.cuda.Event(enable_timing=True)
     timings = []
 
-    for i in range(20):
+    for i in range(2000):
 
         start.record()
         action = policy.get_action(input)
