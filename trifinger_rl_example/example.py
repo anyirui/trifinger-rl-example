@@ -12,7 +12,7 @@ import onnxruntime as ort
 
 logging.basicConfig(level=logging.INFO)
 
-torch.backends.cudnn.benchmark = True
+# torch.backends.cudnn.benchmark = True
 
 
 class NoHapticsPolicy(PolicyBase):
