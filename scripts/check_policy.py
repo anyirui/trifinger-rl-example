@@ -3,6 +3,7 @@ from trifinger_rl_example.example import (
     RawImagePolicy,
     NoHapticsPolicy,
     ForceVecPolicy,
+    BinaryPolicy,
 )
 import torch
 import numpy as np
@@ -18,7 +19,7 @@ if __name__ == "__main__":
             "force_vecs": torch.rand(1, 3, 6),
         },
     }
-    policy = ForceVecPolicy(0, 0, 0)
+    policy = BinaryPolicy(0, 0, 0)
 
     for i in range(20):
         policy.get_action(input)

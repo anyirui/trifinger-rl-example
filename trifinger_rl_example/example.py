@@ -217,6 +217,71 @@ class ForceVecPolicy(PolicyBase):
         return action
 
 
+class BinaryPolicy(PolicyBase):
+
+    _goal_order = ["object_keypoints", "object_position", "object_orientation"]
+
+    def __init__(
+        self,
+        action_space,
+        observation_space,
+        episode_length,
+    ):
+        torch_model_path = "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_03_04_binary_contact/policy.pt"
+        self.action_space = action_space
+        self.device = "cpu"
+        self.dtype = np.float32
+
+        # # load torch script
+        # self.policy = torch.jit.load(
+        #     torch_model_path, map_location=torch.device(self.device)
+        # )
+
+        print("ORT device: ", ort.get_device())
+
+        self.ort_session = ort.InferenceSession(
+            "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_03_04_binary_contact/policy.onnx"
+        )
+
+    @staticmethod
+    def get_policy_config():
+        return PolicyConfig(
+            flatten_obs=True,
+            image_obs=False,
+        )
+
+    def reset(self):
+        pass  # nothing to do here
+
+    def get_action(self, observation):
+
+        obs = torch.concat(
+            (
+                torch.tensor(observation["robot_information"]),
+                torch.flatten(
+                    torch.tensor(
+                        np.linalg.norm(
+                            observation["haptic_information"]["force_vecs"][:, :, -3:],
+                            axis=2,
+                        )
+                        > 0.05
+                    )
+                ),
+            ),
+            axis=0,
+        ).float()
+
+        # obs = obs.to(device=self.device)
+        action = self.ort_session.run(None, {"input_0": np.expand_dims(obs, axis=0)})[
+            0
+        ][0]
+
+        # action = self.policy(obs.unsqueeze(0))
+        # action = action.detach().cpu().numpy()[0]
+        # action = np.clip(action, self.action_space.low, self.action_space.high)
+        return action
+
+
 class RawImagePolicy(PolicyBase):
 
     _goal_order = ["object_keypoints", "object_position", "object_orientation"]
