@@ -11,5 +11,5 @@ if __name__ == "__main__":
 
     algo = d3rlpy.load_learnable(args.algo_path + "algo_state.d3", device="cpu")
     print(args.algo_path + "policy.pt")
-    # algo.save_policy(args.algo_path + "policy.pt")
+    algo.save_policy(args.algo_path + "policy.pt")
     algo.save_policy(args.algo_path + "policy.onnx")
