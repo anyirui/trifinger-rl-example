@@ -32,7 +32,7 @@ class NoHapticsPolicy(PolicyBase):
         self.dtype = np.float32
 
         # load torch script
-        torch_model_path = "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_04_30_nohaptic_default/1/policy.pt"
+        torch_model_path = "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_05_07_nohaptic_default/0/policy.pt"
         # torch_model_path = policies.get_model_path("lift.pt")
         self.policy = torch.jit.load(
             torch_model_path, map_location=torch.device(self.device)
@@ -230,7 +230,7 @@ class BinaryPolicy(PolicyBase):
         observation_space,
         episode_length,
     ):
-        torch_model_path = "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_03_04_binary_contact/policy.pt"
+        # torch_model_path = "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_03_04_binary_contact/policy.pt"
         self.action_space = action_space
         self.device = "cpu"
         self.dtype = np.float32
@@ -243,7 +243,7 @@ class BinaryPolicy(PolicyBase):
         print("ORT device: ", ort.get_device())
 
         self.ort_session = ort.InferenceSession(
-            "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_03_04_binary_contact/policy.onnx"
+            "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_05_07_binary/2/policy.onnx"
         )
 
     @staticmethod
