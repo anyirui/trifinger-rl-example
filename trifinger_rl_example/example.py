@@ -269,6 +269,11 @@ class BinaryPolicy(PolicyBase):
                         )
                         > 0.05)
         
+        logging.info(np.linalg.norm(
+                            observation["haptic_information"]["force_vecs"][:, 3:],
+                            axis=1,
+                        ))
+        
         obs = torch.concat(
             (
                 torch.tensor(observation["robot_information"]),
