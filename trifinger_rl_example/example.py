@@ -245,7 +245,7 @@ class BinaryPolicy(PolicyBase):
         print("Running Binary Policy")
 
         self.ort_session = ort.InferenceSession(
-            "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_05_07_binary/21/policy.onnx"
+            "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_05_07_binary/2/policy.onnx"
         )
 
     @staticmethod
