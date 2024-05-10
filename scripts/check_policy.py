@@ -15,7 +15,7 @@ if __name__ == "__main__":
         "robot_information": np.random.rand(139),
         "haptic_information": {
             "force_maps": torch.rand(9, 40, 40),
-            "raw_images": torch.rand(9, 77, 102),
+            "raw_images": torch.rand(9, 61, 82),
             "force_vecs": torch.rand(3, 6),
         },
     }
