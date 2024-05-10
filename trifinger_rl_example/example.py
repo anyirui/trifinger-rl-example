@@ -94,7 +94,7 @@ class ForceMapPolicy(PolicyBase):
         # self.policy.to(torch.float)
         # print("Device: ", self.device)
 
-        logging.info("ORT device: ", ort.get_device())
+        # logging.info("ORT device: ", ort.get_device())
 
         self.ort_session = ort.InferenceSession(
             "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_05_08_forcemap/1/policy.onnx"
@@ -136,8 +136,8 @@ class ForceMapPolicy(PolicyBase):
             axis=0,
         ).float()
 
-        logging.info(observation["haptic_information"]["force_maps"])
-        print(observation["haptic_information"]["force_maps"])
+        logging.info(np.sum(observation["haptic_information"]["force_maps"]))
+        # print(observation["haptic_information"]["force_maps"])
         # obs = obs.to(device=self.device)
 
         # start = torch.cuda.Event(enable_timing=True)
