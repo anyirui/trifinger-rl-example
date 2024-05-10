@@ -260,13 +260,21 @@ class BinaryPolicy(PolicyBase):
 
     def get_action(self, observation):
 
+        logging.info(
+            np.linalg.norm(
+                observation["haptic_information"]["force_vecs"][:, 3:],
+                axis=1,
+            )
+        )
+        logging.info(observation["haptic_information"]["force_vecs"][:, 3:])
+
         obs = torch.concat(
             (
                 torch.tensor(observation["robot_information"]),
                 torch.flatten(
                     torch.tensor(
                         np.linalg.norm(
-                            observation["haptic_information"]["force_vecs"][:, -3:],
+                            observation["haptic_information"]["force_vecs"][:, 3:],
                             axis=1,
                         )
                         > 0.05
@@ -276,24 +284,6 @@ class BinaryPolicy(PolicyBase):
             axis=0,
         ).float()
 
-        logging.error(
-            torch.tensor(
-                np.linalg.norm(
-                    observation["haptic_information"]["force_vecs"][:, -3:],
-                    axis=1,
-                )
-                > 0.05
-            )
-        )
-        print(
-            torch.tensor(
-                np.linalg.norm(
-                    observation["haptic_information"]["force_vecs"][:, -3:],
-                    axis=1,
-                )
-                > 0.05
-            )
-        )
         # obs = obs.to(device=self.device)
         action = self.ort_session.run(None, {"input_0": np.expand_dims(obs, axis=0)})[
             0
