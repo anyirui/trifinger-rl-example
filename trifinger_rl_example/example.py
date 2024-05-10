@@ -136,7 +136,9 @@ class ForceMapPolicy(PolicyBase):
             axis=0,
         ).float()
 
-        logging.info(np.sum(observation["haptic_information"]["force_maps"]))
+        #logging.info(np.sum(observation["haptic_information"]["force_maps"]))
+
+
         # print(observation["haptic_information"]["force_maps"])
         # obs = obs.to(device=self.device)
 
