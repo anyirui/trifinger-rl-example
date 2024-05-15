@@ -68,10 +68,10 @@ class NoHapticsPolicy(PolicyBase):
         action = action.detach().numpy()[0]
         action = np.clip(action, self.action_space.low, self.action_space.high)
 
-        action = self.ort_session.run(None, {"input_0": np.expand_dims(observation, axis=0)})[
-            0
-        ][0]
-        action = np.clip(action, self.action_space.low, self.action_space.high)
+        # action = self.ort_session.run(None, {"input_0": np.expand_dims(observation, axis=0)})[
+        #     0
+        # ][0]
+        # action = np.clip(action, self.action_space.low, self.action_space.high)
 
         # end.record()
         # torch.cuda.synchronize()
