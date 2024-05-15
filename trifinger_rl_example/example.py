@@ -31,13 +31,17 @@ class NoHapticsPolicy(PolicyBase):
         self.device = "cpu"
         self.dtype = np.float32
 
-        # load torch script
-        torch_model_path = "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_05_07_nohaptic_default/0/policy.pt"
-        # torch_model_path = policies.get_model_path("lift.pt")
-        self.policy = torch.jit.load(
-            torch_model_path, map_location=torch.device(self.device)
+        # # load torch script
+        # torch_model_path = "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_05_07_nohaptic_default/0/policy.pt"
+        # # torch_model_path = policies.get_model_path("lift.pt")
+        # self.policy = torch.jit.load(
+        #     torch_model_path, map_location=torch.device(self.device)
+        # )
+        # self.policy.to(self.device)
+
+        self.ort_session = ort.InferenceSession(
+            "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_05_07_nohaptic_default/0/policy.onnx"
         )
-        self.policy.to(self.device)
 
     @staticmethod
     def get_policy_config():
@@ -60,8 +64,13 @@ class NoHapticsPolicy(PolicyBase):
         )
         # observation = torch.tensor(observation, dtype=torch.float, device=self.device)
 
-        action = self.policy(torch.unsqueeze(observation, 0))
-        action = action.detach().numpy()[0]
+        # action = self.policy(torch.unsqueeze(observation, 0))
+        # action = action.detach().numpy()[0]
+        # action = np.clip(action, self.action_space.low, self.action_space.high)
+
+        action = self.ort_session.run(None, {"input_0": np.expand_dims(observation, axis=0)})[
+            0
+        ][0]
         action = np.clip(action, self.action_space.low, self.action_space.high)
 
         # end.record()
