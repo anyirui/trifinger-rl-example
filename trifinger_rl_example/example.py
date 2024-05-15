@@ -59,12 +59,12 @@ class NoHapticsPolicy(PolicyBase):
         # end = torch.cuda.Event(enable_timing=True)
         # start.record()
 
-        # observation = torch.tensor(
-        #     observation["robot_information"], dtype=torch.float, device=self.device
-        # )
+        observation = torch.tensor(
+            observation["robot_information"], dtype=torch.float, device=self.device
+        )
         # observation = torch.tensor(observation, dtype=torch.float, device=self.device)
-
-        action = self.policy(torch.unsqueeze(observation, 0))
+        action = self.policy(observation.unsqueeze(0))
+        #action = self.policy(torch.unsqueeze(observation, 0))
         action = action.detach().numpy()[0]
         action = np.clip(action, self.action_space.low, self.action_space.high)
 
