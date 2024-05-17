@@ -241,7 +241,7 @@ class BinaryPolicy(PolicyBase):
         observation_space,
         episode_length,
     ):
-        torch_model_path = "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_05_07_binary_contact/2/policy.pt"
+        torch_model_path = "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_05_07_binary/2/policy.pt"
         self.action_space = action_space
         self.device = "cpu"
         self.dtype = np.float32
