@@ -64,7 +64,7 @@ class NoHapticsPolicy(PolicyBase):
         )
         # observation = torch.tensor(observation, dtype=torch.float, device=self.device)
         action = self.policy(observation.unsqueeze(0))
-        #action = self.policy(torch.unsqueeze(observation, 0))
+        # action = self.policy(torch.unsqueeze(observation, 0))
         action = action.detach().numpy()[0]
         action = np.clip(action, self.action_space.low, self.action_space.high)
 
@@ -145,8 +145,7 @@ class ForceMapPolicy(PolicyBase):
             axis=0,
         ).float()
 
-        #logging.info(np.sum(observation["haptic_information"]["force_maps"]))
-
+        # logging.info(np.sum(observation["haptic_information"]["force_maps"]))
 
         # print(observation["haptic_information"]["force_maps"])
         # obs = obs.to(device=self.device)
@@ -242,22 +241,22 @@ class BinaryPolicy(PolicyBase):
         observation_space,
         episode_length,
     ):
-        # torch_model_path = "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_03_04_binary_contact/policy.pt"
+        torch_model_path = "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_03_04_binary_contact/policy.pt"
         self.action_space = action_space
         self.device = "cpu"
         self.dtype = np.float32
 
-        # # load torch script
-        # self.policy = torch.jit.load(
-        #     torch_model_path, map_location=torch.device(self.device)
-        # )
-
-        print("ORT device: ", ort.get_device())
-        print("Running Binary Policy")
-
-        self.ort_session = ort.InferenceSession(
-            "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_05_07_binary/2/policy.onnx"
+        # load torch script
+        self.policy = torch.jit.load(
+            torch_model_path, map_location=torch.device(self.device)
         )
+
+        # print("ORT device: ", ort.get_device())
+        # print("Running Binary Policy")
+
+        # self.ort_session = ort.InferenceSession(
+        #     "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_05_07_binary/2/policy.onnx"
+        # )
 
     @staticmethod
     def get_policy_config():
@@ -271,18 +270,21 @@ class BinaryPolicy(PolicyBase):
 
     def get_action(self, observation):
 
-        logging.info(
-            np.linalg.norm(
-                            observation["haptic_information"]["force_vecs"][:, 3:],
-                            axis=1,
-                        )
-                        > 0.05)
-        
-        logging.info(np.linalg.norm(
-                            observation["haptic_information"]["force_vecs"][:, 3:],
-                            axis=1,
-                        ))
-        
+        # logging.info(
+        #     np.linalg.norm(
+        #         observation["haptic_information"]["force_vecs"][:, 3:],
+        #         axis=1,
+        #     )
+        #     > 0.05
+        # )
+
+        # logging.info(
+        #     np.linalg.norm(
+        #         observation["haptic_information"]["force_vecs"][:, 3:],
+        #         axis=1,
+        #     )
+        # )
+
         obs = torch.concat(
             (
                 torch.tensor(observation["robot_information"]),
@@ -300,13 +302,14 @@ class BinaryPolicy(PolicyBase):
         ).float()
 
         # obs = obs.to(device=self.device)
-        action = self.ort_session.run(None, {"input_0": np.expand_dims(obs, axis=0)})[
-            0
-        ][0]
+        # action = self.ort_session.run(None, {"input_0": np.expand_dims(obs, axis=0)})[
+        #     0
+        # ][0]
 
-        # action = self.policy(obs.unsqueeze(0))
-        # action = action.detach().cpu().numpy()[0]
-        # action = np.clip(action, self.action_space.low, self.action_space.high)
+        action = self.policy(obs.unsqueeze(0))
+        action = action.detach().cpu().numpy()[0]
+        action = np.clip(action, self.action_space.low, self.action_space.high)
+
         return action
 
 
