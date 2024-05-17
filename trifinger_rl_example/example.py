@@ -241,22 +241,22 @@ class BinaryPolicy(PolicyBase):
         observation_space,
         episode_length,
     ):
-        torch_model_path = "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_05_07_binary/2/policy.pt"
+        # torch_model_path = "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_05_07_binary/2/policy.pt"
         self.action_space = action_space
         self.device = "cpu"
         self.dtype = np.float32
 
         # load torch script
-        self.policy = torch.jit.load(
-            torch_model_path, map_location=torch.device(self.device)
-        )
+        # self.policy = torch.jit.load(
+        #     torch_model_path, map_location=torch.device(self.device)
+        # )
 
         # print("ORT device: ", ort.get_device())
         # print("Running Binary Policy")
 
-        # self.ort_session = ort.InferenceSession(
-        #     "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_05_07_binary/2/policy.onnx"
-        # )
+        self.ort_session = ort.InferenceSession(
+            "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_05_07_binary/2/policy.onnx"
+        )
 
     @staticmethod
     def get_policy_config():
@@ -302,12 +302,13 @@ class BinaryPolicy(PolicyBase):
         ).float()
 
         # obs = obs.to(device=self.device)
-        # action = self.ort_session.run(None, {"input_0": np.expand_dims(obs, axis=0)})[
-        #     0
-        # ][0]
+        action = self.ort_session.run(None, {"input_0": np.expand_dims(obs, axis=0)})[
+            0
+        ][0]
 
-        action = self.policy(obs.unsqueeze(0))
-        action = action.detach().cpu().numpy()[0]
+        # action = self.policy(obs.unsqueeze(0))
+        # action = action.detach().cpu().numpy()[0]
+
         action = np.clip(action, self.action_space.low, self.action_space.high)
 
         return action
