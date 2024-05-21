@@ -40,7 +40,7 @@ class NoHapticsPolicy(PolicyBase):
         # self.policy.to(self.device)
 
         self.ort_session = ort.InferenceSession(
-            "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_05_07_nohaptic_default/1_28/policy.onnx"
+            "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_05_07_nohaptic_default/1_28M/policy.onnx"
         )
 
     @staticmethod
