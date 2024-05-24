@@ -39,10 +39,12 @@ class ExpertPolicy(PolicyBase):
             torch_model_path, map_location=torch.device(self.device)
         )
         self.policy.to(self.device)
+
         self.last_action = None
-        self.ort_session = ort.InferenceSession(
-            "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_05_07_nohaptic_default/1_48M/policy.onnx"
-        )
+
+        # self.ort_session = ort.InferenceSession(
+        #     "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_05_07_nohaptic_default/1_48M/policy.onnx"
+        # )
 
     @staticmethod
     def get_policy_config():
