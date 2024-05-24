@@ -69,7 +69,7 @@ class ExpertPolicy(PolicyBase):
         # )[0][0]
 
         action_target = self.policy(observation.unsqueeze(0))
-
+        action_target = action_target.detach().numpy()[0]
         if self.last_action is None:
             action = action_target
         else:
@@ -79,6 +79,7 @@ class ExpertPolicy(PolicyBase):
             )
 
         self.last_action = action
+
         action = np.clip(action, self.action_space.low, self.action_space.high)
 
         return action
