@@ -60,9 +60,11 @@ class ExpertPolicy(PolicyBase):
 
     def get_action(self, observation):
 
-        observation = torch.tensor(
-            observation["robot_information"], dtype=torch.float, device=self.device
-        )
+        # observation = torch.tensor(
+        #     observation["robot_information"], dtype=torch.float, device=self.device
+        # )
+
+        observation = torch.tensor(observation, dtype=torch.float, device=self.device)
 
         # action_target = self.ort_session.run(
         #     None, {"input_0": np.expand_dims(observation, axis=0)}
@@ -381,8 +383,6 @@ class BinaryPolicy(PolicyBase):
             ),
             axis=0,
         ).float()
-
-        logging.info(obs)
 
         # obs = obs.to(device=self.device)
         action = self.ort_session.run(None, {"input_0": np.expand_dims(obs, axis=0)})[
