@@ -110,7 +110,7 @@ class NoHapticsPolicy(PolicyBase):
         # self.policy.to(self.device)
 
         self.ort_session = ort.InferenceSession(
-            "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_05_23_nohaptic_filtered/policy.onnx"
+            "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_05_23_nohaptic_filtered/2_64M/policy.onnx"
         )
 
     @staticmethod
@@ -325,7 +325,7 @@ class BinaryPolicy(PolicyBase):
         # print("Running Binary Policy")
 
         self.ort_session = ort.InferenceSession(
-            "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_05_07_binary/2/policy.onnx"
+            "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_05_27_binary_contact/2/policy.onnx"
         )
 
     @staticmethod
