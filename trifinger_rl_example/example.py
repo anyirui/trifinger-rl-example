@@ -362,13 +362,17 @@ class BinaryPolicy(PolicyBase):
                     torch.tensor(
                         np.concatenate(
                             (
-                                np.linalg.norm(
-                                    observation["haptic_information"]["force_vecs"][
-                                        :, 3:
-                                    ],
-                                    axis=1,
-                                )
-                                > 0.15,
+                                np.where(
+                                    np.linalg.norm(
+                                        observation["haptic_information"]["force_vecs"][
+                                            :, 3:
+                                        ],
+                                        axis=1,
+                                    )
+                                    > 0.15,
+                                    1,
+                                    0,
+                                ),
                                 observation["haptic_information"]["capture_delays"],
                             )
                         )
@@ -377,6 +381,8 @@ class BinaryPolicy(PolicyBase):
             ),
             axis=0,
         ).float()
+
+        logging.info(obs)
 
         # obs = obs.to(device=self.device)
         action = self.ort_session.run(None, {"input_0": np.expand_dims(obs, axis=0)})[
