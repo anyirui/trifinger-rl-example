@@ -360,11 +360,18 @@ class BinaryPolicy(PolicyBase):
                 torch.tensor(observation["robot_information"]),
                 torch.flatten(
                     torch.tensor(
-                        np.linalg.norm(
-                            observation["haptic_information"]["force_vecs"][:, 3:],
-                            axis=1,
+                        np.concatenate(
+                            (
+                                np.linalg.norm(
+                                    observation["haptic_information"]["force_vecs"][
+                                        :, 3:
+                                    ],
+                                    axis=1,
+                                )
+                                > 0.15,
+                                observation["haptic_information"]["capture_delays"],
+                            )
                         )
-                        > 0.05
                     )
                 ),
             ),
