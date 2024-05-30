@@ -29,7 +29,7 @@ class TeleopPolicy(PolicyBase):
     def reset(self):
         pass  # nothing to do here
 
-    # In this function, the policy should receive the current command for the robot joint angles from the user
+    # In this function, the policy should receive the current command for the robot joint angles from the user. It will be called every 20ms to update the current robot joints angles.
     def get_action(self, observation):
 
         self.stream_observation(observation)
