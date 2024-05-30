@@ -41,4 +41,6 @@ class TeleopPolicy(PolicyBase):
 
     # This function streams back the current observation to the user
     def stream_observation(self, observation):
+
+        # This might be unnecessary, we can also just access the webcam image directly with the adjusted fish-eye camera script or do the through-vision with the headset as discussed before
         pass

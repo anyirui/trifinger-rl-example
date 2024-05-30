@@ -4,4 +4,4 @@ task = "lift"  # "push" or "lift"
 record_transitions = true
 # Specify a policy for each task.
 push_policy = "trifinger_rl_example.example.TorchPushPolicy"
-lift_policy = "trifinger_rl_example.example.TorchLiftPolicy"
+lift_policy = "trifinger_rl_example.example.TeleopPolicy"
