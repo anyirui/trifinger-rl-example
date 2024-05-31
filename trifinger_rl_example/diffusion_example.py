@@ -3,6 +3,7 @@
 import numpy as np
 import torch
 import collections
+from scipy import interpolate
 
 from trifinger_rl_datasets import PolicyBase, PolicyConfig
 from trifinger_tactile_learning.custom_algorithms import ConditionalUnet1DState
@@ -30,7 +31,9 @@ def unnormalize_data(ndata, stats):
 def interpolate_data(array):
     upsampled_actions = []
     for i in range(len(array) - 1):
-        linfit = interp1d([1, 6], np.vstack([array[i], array[i + 1]]), axis=0)
+        linfit = interpolate.interp1d(
+            [1, 6], np.vstack([array[i], array[i + 1]]), axis=0
+        )
         linfit_ = linfit([1, 2, 3, 4, 5])
         upsampled_actions.extend(linfit_)
     return upsampled_actions
