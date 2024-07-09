@@ -111,7 +111,7 @@ class NoHapticsPolicy(PolicyBase):
         # )
         # self.policy.to(self.device)
 
-        policy_path = "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_06_04_nohaptic_filtered/28M/policy.onnx"
+        policy_path = "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_06_06_nohaptic_filtered/policy.onnx"
         logging.info(policy_path)
         self.ort_session = ort.InferenceSession(policy_path)
 
