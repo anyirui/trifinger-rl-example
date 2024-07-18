@@ -67,26 +67,15 @@ class ExpertPolicy(PolicyBase):
         observation = torch.tensor(
             observation["robot_information"], dtype=torch.float, device=self.device
         )
+        # observation = torch.tensor(observation, dtype=torch.float, device=self.device)
+        # action = self.policy(observation.unsqueeze(0))
+        # action = self.policy(torch.unsqueeze(observation, 0))
+        # action = action.detach().numpy()[0]
+        # action = np.clip(action, self.action_space.low, self.action_space.high)
 
         action = self.ort_session.run(
             None, {"input_0": np.expand_dims(observation, axis=0)}
         )[0][0]
-
-        # action_target = self.policy(observation.unsqueeze(0))
-        # action_target = action_target.detach().numpy()[0]
-        # if self.last_action is None:
-        #     action = action_target
-        # else:
-        #     action = (
-        #         self.action_low_pass * self.last_action
-        #         + (1.0 - self.action_low_pass) * action_target
-        #     )
-
-        # self.last_action = action
-
-        # action = self.policy(observation.unsqueeze(0))
-        # action = action.detach().numpy()[0]
-
         action = np.clip(action, self.action_space.low, self.action_space.high)
 
         return action
