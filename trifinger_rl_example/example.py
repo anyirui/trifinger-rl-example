@@ -34,7 +34,7 @@ class ExpertPolicy(PolicyBase):
 
         # load torch script
         torch_model_path = (
-            "/is/sg2/iandrussow/trifinger_robot/trained_models/smooth_expert/policy.pt"
+            "/is/sg2/iandrussow/trifinger_robot/trained_models/expert/lift.pt"
         )
         # torch_model_path = policies.get_model_path("lift.pt")
         self.policy = torch.jit.load(
