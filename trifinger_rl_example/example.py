@@ -85,6 +85,7 @@ class ExpertPolicy(PolicyBase):
         # self.last_action = action
 
         action = self.policy(observation.unsqueeze(0))
+        action = action.detach().numpy()[0]
 
         action = np.clip(action, self.action_space.low, self.action_space.high)
 
