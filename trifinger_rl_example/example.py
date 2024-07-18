@@ -32,21 +32,21 @@ class ExpertPolicy(PolicyBase):
         self.device = "cpu"
         self.dtype = np.float32
 
-        # load torch script
-        torch_model_path = (
-            "/is/sg2/iandrussow/trifinger_robot/trained_models/expert/lift.pt"
-        )
-        # torch_model_path = policies.get_model_path("lift.pt")
-        self.policy = torch.jit.load(
-            torch_model_path, map_location=torch.device(self.device)
-        )
-        self.policy.to(self.device)
-
-        self.last_action = None
-
-        # self.ort_session = ort.InferenceSession(
-        #     "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_05_07_nohaptic_default/1_48M/policy.onnx"
+        # # load torch script
+        # torch_model_path = (
+        #     "/is/sg2/iandrussow/trifinger_robot/trained_models/expert/policy.pt"
         # )
+        # # torch_model_path = policies.get_model_path("lift.pt")
+        # self.policy = torch.jit.load(
+        #     torch_model_path, map_location=torch.device(self.device)
+        # )
+        # self.policy.to(self.device)
+
+        # self.last_action = None
+
+        self.ort_session = ort.InferenceSession(
+            "/is/sg2/iandrussow/trifinger_robot/trained_models/expert/policy.onnx"
+        )
 
     @staticmethod
     def get_policy_config():
@@ -68,9 +68,9 @@ class ExpertPolicy(PolicyBase):
             observation["robot_information"], dtype=torch.float, device=self.device
         )
 
-        # action_target = self.ort_session.run(
-        #     None, {"input_0": np.expand_dims(observation, axis=0)}
-        # )[0][0]
+        action = self.ort_session.run(
+            None, {"input_0": np.expand_dims(observation, axis=0)}
+        )[0][0]
 
         # action_target = self.policy(observation.unsqueeze(0))
         # action_target = action_target.detach().numpy()[0]
@@ -84,8 +84,8 @@ class ExpertPolicy(PolicyBase):
 
         # self.last_action = action
 
-        action = self.policy(observation.unsqueeze(0))
-        action = action.detach().numpy()[0]
+        # action = self.policy(observation.unsqueeze(0))
+        # action = action.detach().numpy()[0]
 
         action = np.clip(action, self.action_space.low, self.action_space.high)
 

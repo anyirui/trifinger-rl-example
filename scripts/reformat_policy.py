@@ -12,15 +12,18 @@ if __name__ == "__main__":
 
     algo = d3rlpy.load_learnable(args.algo_path + "algo_state.d3", device=device)
     # print(args.algo_path + "policy.pt")
-    algo.save_policy(args.algo_path + "policy.pt")
+    # algo.load_model(args.algo_path + "policy.pt")
+    # algo.save_policy(args.algo_path + "policy.pt")
+
+    # policy = torch.load(args.algo_path + "policy.pt")
 
     print("Save onnx policy")
-    algo.save_policy(args.algo_path + "policy.onnx")
-    # dummy_x = torch.rand(1, *algo.observation_shape, device=device)
-    # jitted_model = torch.jit.load(args.algo_path + "policy.pt")
-    # torch.onnx.export(
-    #     jitted_model,
-    #     dummy_x,
-    #     args.algo_path + "policy.onnx",
-    #     opset_version=14,
-    # )
+    # algo.save_policy(args.algo_path + "policy.onnx")
+    dummy_x = torch.rand(1, *algo.observation_shape, device=device)
+    jitted_model = torch.jit.load(args.algo_path + "policy.pt")
+    torch.onnx.export(
+        jitted_model,
+        dummy_x,
+        args.algo_path + "policy.onnx",
+        opset_version=14,
+    )
