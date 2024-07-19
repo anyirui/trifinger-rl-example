@@ -8,7 +8,7 @@ from trifinger_rl_datasets import PolicyBase, PolicyConfig
 from . import policies
 import logging
 
-import onnxruntime as ort
+# import onnxruntime as ort
 
 logging.basicConfig(level=logging.INFO)
 
