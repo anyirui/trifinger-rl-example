@@ -81,6 +81,70 @@ class ExpertPolicy(PolicyBase):
         return action
 
 
+class SmoothExpertPolicy(PolicyBase):
+
+    _goal_order = ["object_keypoints", "object_position", "object_orientation"]
+
+    def __init__(
+        self,
+        action_space,
+        observation_space,
+        episode_length,
+    ):
+        self.action_low_pass = 0.73
+
+        print("CUDA: ", torch.cuda.is_available())
+        self.action_space = action_space
+        self.device = "cpu"
+        self.dtype = np.float32
+
+        # load torch script
+        torch_model_path = (
+            "/is/sg2/iandrussow/trifinger_robot/trained_models/smooth_expert/policy.pt"
+        )
+        # torch_model_path = policies.get_model_path("lift.pt")
+        self.policy = torch.jit.load(
+            torch_model_path, map_location=torch.device(self.device)
+        )
+        self.policy.to(self.device)
+
+        self.last_action = None
+
+    @staticmethod
+    def get_policy_config():
+        return PolicyConfig(
+            flatten_obs=True,
+            image_obs=False,
+        )
+
+    def reset(self):
+        pass  # nothing to do here
+
+    def get_action(self, observation):
+
+        observation = torch.tensor(observation, dtype=torch.float, device=self.device)
+
+        # action_target = self.ort_session.run(
+        #     None, {"input_0": np.expand_dims(observation, axis=0)}
+        # )[0][0]
+
+        action_target = self.policy(observation.unsqueeze(0))
+        action_target = action_target.detach().numpy()[0]
+        if self.last_action is None:
+            action = action_target
+        else:
+            action = (
+                self.action_low_pass * self.last_action
+                + (1.0 - self.action_low_pass) * action_target
+            )
+
+        self.last_action = action
+
+        action = np.clip(action, self.action_space.low, self.action_space.high)
+
+        return action
+
+
 class NoHapticsPolicy(PolicyBase):
 
     _goal_order = ["object_keypoints", "object_position", "object_orientation"]
