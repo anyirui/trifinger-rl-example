@@ -20,10 +20,14 @@ if __name__ == "__main__":
     print("Save onnx policy")
     # algo.save_policy(args.algo_path + "policy.onnx")
     dummy_x = torch.rand(1, *algo.observation_shape, device=device)
+    num_inputs = 1
     jitted_model = torch.jit.load(args.algo_path + "policy.pt")
     torch.onnx.export(
         jitted_model,
         dummy_x,
         args.algo_path + "policy.onnx",
-        opset_version=14,
+        export_params=True,
+        opset_version=11,
+        input_names=[f"input_{i}" for i in range(num_inputs)],
+        output_names=["output_0"],
     )
