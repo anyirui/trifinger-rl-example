@@ -8,7 +8,7 @@ from trifinger_rl_datasets import PolicyBase, PolicyConfig
 from . import policies
 import logging
 
-import onnxruntime as ort
+# import onnxruntime as ort
 
 logging.basicConfig(level=logging.INFO)
 
@@ -98,19 +98,15 @@ class SmoothExpertPolicy(PolicyBase):
         self.device = "cpu"
         self.dtype = np.float32
 
-        # # load torch script
-        # torch_model_path = (
-        #     "/is/sg2/iandrussow/trifinger_robot/trained_models/smooth_expert/policy.pt"
-        # )
-        # # torch_model_path = policies.get_model_path("lift.pt")
-        # self.policy = torch.jit.load(
-        #     torch_model_path, map_location=torch.device(self.device)
-        # )
-        # self.policy.to(self.device)
-
-        self.ort_session = ort.InferenceSession(
-            "/is/sg2/iandrussow/trifinger_robot/trained_models/smooth_expert/policy.onnx"
+        # load torch script
+        torch_model_path = (
+            "/is/sg2/iandrussow/trifinger_robot/trained_models/smooth_expert/policy.pt"
         )
+        # torch_model_path = policies.get_model_path("lift.pt")
+        self.policy = torch.jit.load(
+            torch_model_path, map_location=torch.device(self.device)
+        )
+        self.policy.to(self.device)
 
         self.last_action = None
 
@@ -128,12 +124,12 @@ class SmoothExpertPolicy(PolicyBase):
 
         observation = torch.tensor(observation, dtype=torch.float, device=self.device)
 
-        action_target = self.ort_session.run(
-            None, {"input_0": np.expand_dims(observation, axis=0)}
-        )[0][0]
+        # action_target = self.ort_session.run(
+        #     None, {"input_0": np.expand_dims(observation, axis=0)}
+        # )[0][0]
 
-        # action_target = self.policy(observation.unsqueeze(0))
-        # action_target = action_target.detach().numpy()[0]
+        action_target = self.policy(observation.unsqueeze(0))
+        action_target = action_target.detach().numpy()[0]
         if self.last_action is None:
             action = action_target
         else:
