@@ -60,11 +60,11 @@ class ExpertPolicy(PolicyBase):
 
     def get_action(self, observation):
 
-        # observation = torch.tensor(
-        #     observation["robot_information"], dtype=torch.float, device=self.device
-        # )
+        observation = torch.tensor(
+            observation["robot_information"], dtype=torch.float, device=self.device
+        )
 
-        observation = torch.tensor(observation, dtype=torch.float, device=self.device)
+        # observation = torch.tensor(observation, dtype=torch.float, device=self.device)
         # observation = torch.tensor(observation, dtype=torch.float, device=self.device)
         # action = self.policy(observation.unsqueeze(0))
         # action = self.policy(torch.unsqueeze(observation, 0))
