@@ -124,7 +124,11 @@ class SmoothExpertPolicy(PolicyBase):
 
     def get_action(self, observation):
 
-        observation = torch.tensor(observation, dtype=torch.float, device=self.device)
+        observation = torch.tensor(
+            observation["robot_information"], dtype=torch.float, device=self.device
+        )
+
+        # observation = torch.tensor(observation, dtype=torch.float, device=self.device)
 
         action_target = self.ort_session.run(
             None, {"input_0": np.expand_dims(observation, axis=0)}
