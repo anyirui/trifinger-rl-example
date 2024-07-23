@@ -140,8 +140,9 @@ class SmoothExpertPolicy(PolicyBase):
             action = action_target
         else:
             action = (
-                1.0 - self.action_low_pass
-            ) * self.last_action + self.action_low_pass * action_target
+                self.action_low_pass * self.last_action
+                + (1.0 - self.action_low_pass) * action_target
+            )
 
         self.last_action = action
 
