@@ -107,7 +107,7 @@ class SmoothExpertPolicy(PolicyBase):
         # self.policy.to(self.device)
 
         self.ort_session = ort.InferenceSession(
-            "/is/sg2/iandrussow/trifinger_robot/trained_models/smooth_expert/policy.onnx"
+            "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_07_22_smooth_crr/policy.onnx"
         )
 
         self.last_action = None

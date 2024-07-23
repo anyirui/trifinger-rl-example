@@ -13,9 +13,9 @@ if __name__ == "__main__":
     algo = d3rlpy.load_learnable(args.algo_path + "algo_state.d3", device=device)
     # print(args.algo_path + "policy.pt")
     # algo.load_model(args.algo_path + "policy.pt")
-    # algo.save_policy(args.algo_path + "policy.pt")
+    algo.save_policy(args.algo_path + "policy.pt")
 
-    # policy = torch.load(args.algo_path + "policy.pt")
+    policy = torch.load(args.algo_path + "policy.pt")
 
     print("Save onnx policy")
     # algo.save_policy(args.algo_path + "policy.onnx")
