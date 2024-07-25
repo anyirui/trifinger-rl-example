@@ -155,12 +155,7 @@ class NoHapticsPolicy(PolicyBase):
 
     _goal_order = ["object_keypoints", "object_position", "object_orientation"]
 
-    def __init__(
-        self,
-        action_space,
-        observation_space,
-        episode_length,
-    ):
+    def __init__(self, action_space, observation_space, episode_length, policy_path):
 
         print("CUDA: ", torch.cuda.is_available())
         self.action_space = action_space
@@ -175,7 +170,7 @@ class NoHapticsPolicy(PolicyBase):
         # )
         # self.policy.to(self.device)
 
-        policy_path = "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_06_06_nohaptic_filtered/policy.onnx"
+        # policy_path = "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_06_06_nohaptic_filtered/policy.onnx"
         logging.info(policy_path)
         self.ort_session = ort.InferenceSession(policy_path)
 
@@ -371,12 +366,7 @@ class BinaryPolicy(PolicyBase):
 
     _goal_order = ["object_keypoints", "object_position", "object_orientation"]
 
-    def __init__(
-        self,
-        action_space,
-        observation_space,
-        episode_length,
-    ):
+    def __init__(self, action_space, observation_space, episode_length, policy_path):
         # torch_model_path = "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_05_07_binary/2/policy.pt"
         self.action_space = action_space
         self.device = "cpu"
@@ -390,9 +380,7 @@ class BinaryPolicy(PolicyBase):
         # print("ORT device: ", ort.get_device())
         # print("Running Binary Policy")
 
-        self.ort_session = ort.InferenceSession(
-            "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_07_23_binary_crr_smooth/policy.onnx"
-        )
+        self.ort_session = ort.InferenceSession(policy_path)
 
     @staticmethod
     def get_policy_config():
