@@ -88,6 +88,7 @@ class SmoothExpertPolicy(PolicyBase):
         action_space,
         observation_space,
         episode_length,
+        policy_path
     ):
         self.action_low_pass = 0.73
 
