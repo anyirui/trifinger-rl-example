@@ -83,13 +83,7 @@ class SmoothExpertPolicy(PolicyBase):
 
     _goal_order = ["object_keypoints", "object_position", "object_orientation"]
 
-    def __init__(
-        self,
-        action_space,
-        observation_space,
-        episode_length,
-        policy_path
-    ):
+    def __init__(self, action_space, observation_space, episode_length, policy_path):
         self.action_low_pass = 0.73
 
         print("CUDA: ", torch.cuda.is_available())
@@ -428,7 +422,7 @@ class BinaryPolicy(PolicyBase):
                                     1,
                                     0,
                                 ),
-                                observation["haptic_information"]["capture_delays"],
+                                observation["haptic_information"]["process_delays"],
                             )
                         )
                     )
