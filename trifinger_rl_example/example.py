@@ -322,13 +322,13 @@ class ForceVecPolicy(PolicyBase):
 
     def get_action(self, observation):
 
-        obs = torch.concat(
-            (
-                torch.tensor(observation["robot_information"]),
+        obs = torch.flatten(
+            torch.tensor(
+                np.concatenate(observation["robot_information"]),
                 torch.flatten(
                     torch.tensor(observation["haptic_information"]["force_vecs"])
                 ),
-                observation["haptic_information"]["process_delays"],
+                torch.tensor(observation["haptic_information"]["process_delays"]),
             ),
             axis=0,
         ).float()
