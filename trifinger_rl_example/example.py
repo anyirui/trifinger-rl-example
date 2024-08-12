@@ -209,12 +209,7 @@ class ForceMapPolicy(PolicyBase):
 
     _goal_order = ["object_keypoints", "object_position", "object_orientation"]
 
-    def __init__(
-        self,
-        action_space,
-        observation_space,
-        episode_length,
-    ):
+    def __init__(self, action_space, observation_space, episode_length, policy_path):
         print("CUDA: ", torch.cuda.is_available())
         # torch_model_path = "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_04_16_forcemap/policy.pt"
         # torch_model_path = "/home/andrussow/cluster/snagi/training_results/2024_03_26_forcemap/crr/working_directories/0/policy.pt"
@@ -230,10 +225,8 @@ class ForceMapPolicy(PolicyBase):
         # print("Device: ", self.device)
 
         # logging.info("ORT device: ", ort.get_device())
-
-        self.ort_session = ort.InferenceSession(
-            "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_05_08_forcemap/1/policy.onnx"
-        )
+        logging.info(policy_path)
+        self.ort_session = ort.InferenceSession(policy_path)
         self.timings = []
 
     @staticmethod
@@ -302,13 +295,8 @@ class ForceVecPolicy(PolicyBase):
 
     _goal_order = ["object_keypoints", "object_position", "object_orientation"]
 
-    def __init__(
-        self,
-        action_space,
-        observation_space,
-        episode_length,
-    ):
-        torch_model_path = "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_03_01_forcevector/policy.pt"
+    def __init__(self, action_space, observation_space, episode_length, policy_path):
+        # torch_model_path = "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_03_01_forcevector/policy.pt"
         self.action_space = action_space
         self.device = "cpu"
         self.dtype = np.float32
@@ -319,10 +307,8 @@ class ForceVecPolicy(PolicyBase):
         # )
 
         print("ORT device: ", ort.get_device())
-
-        self.ort_session = ort.InferenceSession(
-            "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_03_01_forcevector/policy.onnx"
-        )
+        logging.info(policy_path)
+        self.ort_session = ort.InferenceSession(policy_path)
 
     @staticmethod
     def get_policy_config():
@@ -342,6 +328,7 @@ class ForceVecPolicy(PolicyBase):
                 torch.flatten(
                     torch.tensor(observation["haptic_information"]["force_vecs"])
                 ),
+                observation["haptic_information"]["process_delays"],
             ),
             axis=0,
         ).float()
