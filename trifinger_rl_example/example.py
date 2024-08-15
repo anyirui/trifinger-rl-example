@@ -257,10 +257,10 @@ class ForceMapPolicy(PolicyBase):
         obs = torch.concat(
             (
                 torch.tensor(observation["robot_information"]),
-                torch.tensor(observation["haptic_information"]["process_delays"]),
                 torch.flatten(
                     torch.tensor(observation["haptic_information"]["force_maps"])
                 ),
+                torch.tensor(observation["haptic_information"]["process_delays"]),
             ),
             axis=0,
         ).float()
