@@ -257,6 +257,7 @@ class ForceMapPolicy(PolicyBase):
         obs = torch.concat(
             (
                 torch.tensor(observation["robot_information"]),
+                torch.tensor(observation["haptic_information"]["process_delays"]),
                 torch.flatten(
                     torch.tensor(observation["haptic_information"]["force_maps"])
                 ),
@@ -325,10 +326,10 @@ class ForceVecPolicy(PolicyBase):
         obs = torch.concat(
             (
                 torch.tensor(observation["robot_information"]),
+                torch.tensor(observation["haptic_information"]["process_delays"]),
                 torch.flatten(
                     torch.tensor(observation["haptic_information"]["force_vecs"])
                 ),
-                torch.tensor(observation["haptic_information"]["process_delays"]),
             ),
             axis=0,
         ).float()
@@ -398,6 +399,7 @@ class BinaryPolicy(PolicyBase):
                     torch.tensor(
                         np.concatenate(
                             (
+                                observation["haptic_information"]["process_delays"],
                                 np.where(
                                     np.linalg.norm(
                                         observation["haptic_information"]["force_vecs"][
@@ -409,7 +411,6 @@ class BinaryPolicy(PolicyBase):
                                     1,
                                     0,
                                 ),
-                                observation["haptic_information"]["process_delays"],
                             )
                         )
                     )
