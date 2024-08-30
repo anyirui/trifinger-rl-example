@@ -481,6 +481,7 @@ class RawImagePolicy(PolicyBase):
         obs = torch.concat(
             (
                 torch.tensor(observation["robot_information"]),
+                torch.tensor(observation["haptic_information"]["process_delays"]),
                 torch.flatten(
                     torch.tensor(observation["haptic_information"]["raw_images"])
                 ),
