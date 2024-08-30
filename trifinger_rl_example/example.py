@@ -491,7 +491,9 @@ class RawImagePolicy(PolicyBase):
 
         obs = obs.to(device=self.device)
 
-        action = self.ort_session.run(None, {"input_0": np.expand_dims(obs, axis=0)})[0]
+        action = self.ort_session.run(None, {"input_0": np.expand_dims(obs, axis=0)})[
+            0
+        ][0]
 
         # action = self.policy(obs.unsqueeze(0))
         # action = action.detach().cpu().numpy()[0]
