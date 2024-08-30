@@ -257,10 +257,10 @@ class ForceMapPolicy(PolicyBase):
         obs = torch.concat(
             (
                 torch.tensor(observation["robot_information"]),
+                torch.tensor(observation["haptic_information"]["process_delays"]),
                 torch.flatten(
                     torch.tensor(observation["haptic_information"]["force_maps"])
                 ),
-                torch.tensor(observation["haptic_information"]["process_delays"]),
             ),
             axis=0,
         ).float()
@@ -436,16 +436,13 @@ class RawImagePolicy(PolicyBase):
 
     _goal_order = ["object_keypoints", "object_position", "object_orientation"]
 
-    def __init__(
-        self,
-        action_space,
-        observation_space,
-        episode_length,
-    ):
+    def __init__(self, action_space, observation_space, episode_length, policy_path):
         print("CUDA: ", torch.cuda.is_available())
-        torch_model_path = "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_04_29_raw_image_resnet9/policy.pt"
-        # torch_model_path = "/is/sg2/iandrussow/trifinger_robot/trained_models/test_models/convmixer/policy.pt"
+
+        # policy_path = "/is/sg2/iandrussow/trifinger_robot/trained_models/test_models/small_encoder/policy.onnx"
+
         self.action_space = action_space
+        # self.device = "cuda" if torch.cuda.is_available() else "cpu"
         self.device = "cpu"
         self.dtype = np.float32
 
@@ -453,12 +450,11 @@ class RawImagePolicy(PolicyBase):
         #     torch_model_path, map_location=torch.device(self.device)
         # )
         # self.policy.to(torch.float)
-        # print("ORT device: ", ort.get_device())
+        print("ORT device: ", ort.get_device())
 
-        self.ort_session = ort.InferenceSession(
-            "/is/sg2/iandrussow/trifinger_robot/trained_models/test_models/small_encoder/policy.onnx"
-            # "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_04_29_raw_image_resnet9/policy.onnx"
-        )
+        self.ort_session = ort.InferenceSession(policy_path)
+        # "/is/sg2/iandrussow/trifinger_robot/trained_models/test_models/small_encoder/policy.onnx"
+        # "/is/sg2/iandrussow/trifinger_robot/trained_models/2024_04_29_raw_image_resnet9/policy.onnx"
 
         self.timings = []
 
