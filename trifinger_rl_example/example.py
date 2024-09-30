@@ -1,4 +1,5 @@
 """Example policy for Real Robot Challenge 2022"""
+
 import numpy as np
 import torch
 
@@ -9,7 +10,7 @@ from . import policies
 
 class TorchBasePolicy(PolicyBase):
 
-    _goal_order = ["object_keypoints", "object_position", "object_orientation"] 
+    _goal_order = ["object_keypoints", "object_position", "object_orientation"]
 
     def __init__(
         self,
@@ -63,5 +64,5 @@ class TorchLiftPolicy(TorchBasePolicy):
     """
 
     def __init__(self, action_space, observation_space, episode_length):
-        model = policies.get_model_path("lift.pt")
+        model = policies.get_model_path("trifinger.pt")
         super().__init__(model, action_space, observation_space, episode_length)
